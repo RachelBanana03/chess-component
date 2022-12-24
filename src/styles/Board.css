@@ -5,4 +5,5 @@
     grid-template-rows: repeat(8, 1fr);
     width: 640px;
     height: 640px;
+    margin: auto;
 }

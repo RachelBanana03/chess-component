@@ -8,6 +8,7 @@ function Cell({ piece, className }) {
             {piece? <img 
                 src={chess_pieces[piece]} 
                 alt={piece}
+                draggable={false}
             />:null}
         </div>
     )

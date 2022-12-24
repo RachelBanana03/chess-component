@@ -17,4 +17,5 @@
 .Cell>img {
     position: absolute;
     left: 0;
+    cursor: grab;
 }

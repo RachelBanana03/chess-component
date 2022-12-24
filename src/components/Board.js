@@ -46,7 +46,7 @@ function Board() {
                 }
             </div>
             <button onClick={clickHandler}>Click</button>
-            <p>{mousePos.join(" ")}</p>
+            <p>{mousePos?.join(" ")}</p>
         </div>
     )
 }
