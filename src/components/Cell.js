@@ -13,7 +13,7 @@ function Cell({ piece, className, pieceSelected, setPieceSelected, pos, makeMove
         setCellPos({
             left: mousePos?.[0] - cellRect?.left - 40,
             top: mousePos?.[1] - cellRect?.top - 40,
-            "z-index": "2"
+            "zIndex": "2"
         })
     },[mousePos]);
 

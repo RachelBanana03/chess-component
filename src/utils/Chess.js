@@ -61,13 +61,9 @@ class Chess {
         // check if piece moveset can move to end legally
         // check if path is blocked
         // if end is own piece
+        // if the move cause own king to be checked
         return true;
     }
 }
 
 export default Chess;
-
-// const game = new Chess();
-// game.move([6,3], [4,3])
-// game.move([1,3], [3,3]);
-// console.log(game.board);

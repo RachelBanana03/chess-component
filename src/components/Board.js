@@ -2,6 +2,15 @@ import React, { useRef, useState } from 'react'
 import Cell from "./Cell";
 import Chess from "../utils/Chess";
 import "../styles/Board.css";
+import moveSfxFile from "../sounds/move-self.mp3";
+
+const moveSfx = new Audio(moveSfxFile);
+
+function playAudio(audio) {
+    if (!audio) return;
+    audio.currentTime = 0;
+    audio.play();
+}
 
 function useGame() {
     const gameRef = useRef();
@@ -19,6 +28,7 @@ function Board() {
 
     const makeMove = (start, end) => {
         if (game.move(start, end)) {
+            playAudio(moveSfx);
             setBoard(game.board);
         }
     }
@@ -40,7 +50,6 @@ function Board() {
     }
 
     return (
-        <div>
             <div 
                 className="Board" 
                 onMouseMove={mouseMoveHandler}
@@ -63,8 +72,6 @@ function Board() {
                 ))
                 }
             </div>
-            <p>{mousePos?.join(" ")}</p>
-        </div>
     )
 }
 
