@@ -1,0 +1,12 @@
+.Cell {
+    border: 1px solid black;
+    margin: -0.5px;
+}
+
+.Cell.white {
+    background: #EFEFEF;
+}
+
+.Cell.black {
+    background: #C2D7E2;
+}
