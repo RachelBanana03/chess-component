@@ -12,10 +12,6 @@
 
 .Cell>img {
     width: 100%;
-}
-
-.Cell>img {
     position: absolute;
     left: 0;
-    cursor: grab;
 }
