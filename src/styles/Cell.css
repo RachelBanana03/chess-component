@@ -10,3 +10,7 @@
 .Cell.black {
     background: #C2D7E2;
 }
+
+.Cell>img {
+    width: 100%;
+}
