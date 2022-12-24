@@ -15,6 +15,7 @@ function Board() {
     console.log("render")
     const game = useGame();
     const [board, setBoard] = useState(game.board);
+    const [mousePos, setMousePos] = useState(null);
 
     const clickHandler = () => {
         if (game.move([6,3], [4,3])) {
@@ -22,20 +23,30 @@ function Board() {
         }
     }
 
+    const mouseMoveHandler = (e) => {
+        const boardRect = e.currentTarget.getBoundingClientRect();
+        const x = e.clientX - boardRect.left; 
+        const y = e.pageY - boardRect.top; 
+        setMousePos([x,y]);
+    }
+
     return (
-        <div className="Board">
-            {
-            [].concat(...board.map(
-                (row,i)=>row.map(
-                    (piece,j)=><Cell 
-                        className={i%2===j%2? "white":"black"}
-                        piece={piece} 
-                        key={10*i + j}
-                    />
-                )
-            ))
-            }
+        <div>
+            <div className="Board" onMouseMove={mouseMoveHandler}>
+                {
+                [].concat(...board.map(
+                    (row,i)=>row.map(
+                        (piece,j)=><Cell 
+                            className={i%2===j%2? "white":"black"}
+                            piece={piece} 
+                            key={10*i + j}
+                        />
+                    )
+                ))
+                }
+            </div>
             <button onClick={clickHandler}>Click</button>
+            <p>{mousePos.join(" ")}</p>
         </div>
     )
 }

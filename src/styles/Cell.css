@@ -1,6 +1,5 @@
 .Cell {
-    border: 1px solid black;
-    margin: -0.5px;
+    position: relative;
 }
 
 .Cell.white {
@@ -13,4 +12,9 @@
 
 .Cell>img {
     width: 100%;
+}
+
+.Cell>img {
+    position: absolute;
+    left: 0;
 }
