@@ -12,29 +12,24 @@ function Cell({ piece, className, pieceSelected, setPieceSelected, pos, makeMove
         const cellRect = cellRef?.current?.getBoundingClientRect?.();
         setCellPos({
             left: mousePos?.[0] - cellRect?.left - 40,
-            top: mousePos?.[1] - cellRect?.top - 40
+            top: mousePos?.[1] - cellRect?.top - 40,
+            "z-index": "2"
         })
     },[mousePos]);
 
     const mouseDownHandler = (e) => {
-        setPieceSelected({piece, pos: [...pos]});
+        setPieceSelected({piece, pos: [...pos], setIsPicked});
         setIsPicked(true);
-    }
-
-    const mouseUpHandler = (e) => {
-        if (!pieceSelected || !pos) return;
-        makeMove(pieceSelected.pos, pos);
-        setPieceSelected(null);
-        setIsPicked(false);
     }
 
     return (
         <div 
+            data-pos={pos}
             className={`Cell ${className}`}
-            onMouseUp={mouseUpHandler}
             ref={cellRef}
         >
             {piece? <img 
+                data-pos={pos}
                 src={chess_pieces[piece]} 
                 alt={piece}
                 draggable={false}

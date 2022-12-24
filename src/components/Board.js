@@ -29,11 +29,22 @@ function Board() {
         setMousePos([x,y]);
     }
 
+    const mouseUpHandler = e => {
+        const dropCell = document.elementsFromPoint(mousePos[0], mousePos[1])[1];
+        if (dropCell?.dataset && pieceSelected) {
+            const newPos = dropCell.dataset.pos.split(",").map(c=>Number(c));
+            makeMove(pieceSelected.pos, newPos);
+        }
+        pieceSelected?.setIsPicked?.(false);
+        setPieceSelected(null);
+    }
+
     return (
         <div>
             <div 
                 className="Board" 
                 onMouseMove={mouseMoveHandler}
+                onMouseUp={mouseUpHandler}
             >
                 {
                 [].concat(...board.map(
