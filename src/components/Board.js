@@ -31,7 +31,17 @@ function Board() {
     const makeMove = (start, end) => {
         const moveResult = game.move(start, end);
         if (!moveResult) return;
-        playAudio(moveResult===CSym.CAPTURE? captureSfx: moveSfx);
+
+        // play audio according to symbol
+        switch(moveResult) {
+            case CSym.CAPTURE:
+            case CSym.EN_PASSANT:
+                playAudio(captureSfx);
+                break;
+            default:
+                playAudio(moveSfx);
+        }
+        
         setBoard(game.board);
     }
 

@@ -2,6 +2,7 @@ class Chess {
     #board;
     #moves;
     #isWhiteTurn;
+    #enPassantPos;
     // 50-move rule
     // castling
     // en passant
@@ -16,6 +17,7 @@ class Chess {
             this.#board[7] = ["R", "N", "B", "Q", "K", "B", "N", "R"];
             this.#moves = [];
             this.#isWhiteTurn = true;
+            this.#enPassantPos = null;
         }
     }
 
@@ -88,6 +90,14 @@ class Chess {
         this.#moves.push([start, end]);
         this.#isWhiteTurn = !this.#isWhiteTurn;
 
+        // if en passant, clears en passant position
+        if (moveSymbol===ChessSymbols.EN_PASSANT) {
+            this.#board[this.#enPassantPos[0]][this.#enPassantPos[1]] = null;
+        }
+
+        // if pawn advances by two, add end pos, else toggle null
+        this.#enPassantPos = moveSymbol===ChessSymbols.ADVANCE? end: null;
+
         return moveSymbol;
     }
 
@@ -112,8 +122,9 @@ class Chess {
                     }
                 }
             }
-            // captures
+            
             for (const horizontal of [1,-1]) {
+                // captures
                 curPos = [start[0]+direction,start[1]+horizontal];
                 if (!Chess.inBoard(curPos)) continue;
                 const opponent = this.#board[curPos[0]][curPos[1]];
@@ -121,8 +132,17 @@ class Chess {
                 if (opponent && Chess.isWhite(opponent)!==Chess.isWhite(piece)) {
                     moves.push([...curPos, ChessSymbols.CAPTURE]);
                 }
+
+                // en passant
+                const passPos = [start[0], start[1]+horizontal];
+                if (
+                    this.#enPassantPos && 
+                    this.#enPassantPos[0]===passPos[0] &&
+                    this.#enPassantPos[1]===passPos[1]
+                ) {
+                    moves.push([...curPos, ChessSymbols.EN_PASSANT]);
+                }
             }
-            // en passant?
             // promotion?
 
             return moves;
