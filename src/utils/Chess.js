@@ -19,6 +19,35 @@ class Chess {
         }
     }
 
+    static moveSets = {
+        "n": {
+            moves: [[1, 2],[2, 1],[2, -1],[1, -2],[-1, -2],[-2, -1],[-2, 1],[-1, 2]],
+            longRange: false
+        },
+        "b": {
+            moves: [[1, 1],[1, -1],[-1, -1],[-1, 1]],
+            longRange: true
+        },
+        "r": {
+            moves: [[0, 1],[1, 0],[0, -1],[-1, 0]],
+            longRange: true
+        },
+        "q": {
+            moves: [
+                [0, 1],[1, 0],[0, -1],[-1, 0],
+                [1, 1],[1, -1],[-1, -1],[-1, 1]
+            ],
+            longRange: true
+        },
+        "k": {
+            moves: [
+                [0, 1],[1, 0],[0, -1],[-1, 0],
+                [1, 1],[1, -1],[-1, -1],[-1, 1]
+            ],
+            longRange: false
+        }
+    };
+
     static isFEN(str) {
 
     }
@@ -52,8 +81,12 @@ class Chess {
         return true;
     }
 
-    #isLegalPiece(piece, start, end) {
-        
+    #possibleMoves(piece, start, end) {
+        // if pawn, different rules
+        // also castling?
+
+        //
+        const {moves, longRange} = Chess.moveSets[piece.toLowerCase()];
     }
 
     isLegal(start, end) {
@@ -66,7 +99,7 @@ class Chess {
         if (!piece || /[PNBRQK]/.test(piece) !== this.#turn) return false;
         // if end is own piece
         const opponent = this.#board[end[0]][end[1]];
-        if (/[PNBRQK]/.test(opponent) === this.#turn) return false;
+        if (opponent && /[PNBRQK]/.test(opponent) === this.#turn) return false;
         
         // check if piece moveset can move to end legally
         // check if path is blocked
