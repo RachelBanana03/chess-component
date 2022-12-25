@@ -167,4 +167,15 @@ class Chess {
     }
 }
 
+const ChessSymbols = {
+    MOVE: Symbol(0),
+    CAPTURE: Symbol(1),
+    CHECK: Symbol(2),
+    CASTLE: Symbol(3),
+    ADVANCE: Symbol(4), //pawn's two-square advance
+    EN_PASSANT: Symbol(5),
+    PROMOTE: Symbol(6)
+}
+
 export default Chess;
+export { ChessSymbols };

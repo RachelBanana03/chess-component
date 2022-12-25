@@ -27,10 +27,10 @@ function Board() {
     const [pieceSelected, setPieceSelected] = useState(null);
 
     const makeMove = (start, end) => {
-        if (game.move(start, end)) {
-            playAudio(moveSfx);
-            setBoard(game.board);
-        }
+        const moveResult = game.move(start, end);
+        if (!moveResult) return;
+        playAudio(moveSfx);
+        setBoard(game.board);
     }
 
     const mouseMoveHandler = (e) => {
