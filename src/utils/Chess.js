@@ -79,14 +79,18 @@ class Chess {
     move(start, end) {
         if (!this.isLegal(start, end)) return false;
         const piece = this.#board[start[0]][start[1]];
-        // if piece is pawn and en passant piece is close
 
         // make move
         this.#board[start[0]][start[1]] = null;
+
+        // if opponent exists (it's confirmed to be opposite color because of isLegal)
+        const opponent = this.#board[end[0]][end[1]];
+
         this.#board[end[0]][end[1]] = piece;
         this.#moves.push([start, end]);
         this.#isWhiteTurn = !this.#isWhiteTurn;
-        return true;
+
+        return opponent? ChessSymbols.CAPTURE: ChessSymbols.MOVE;
     }
 
     #possibleMoves(piece, start) {

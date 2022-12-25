@@ -1,10 +1,12 @@
 import React, { useRef, useState } from 'react'
 import Cell from "./Cell";
-import Chess from "../utils/Chess";
+import Chess, { ChessSymbols as CSym } from "../utils/Chess";
 import "../styles/Board.css";
 import moveSfxFile from "../sounds/move-self.mp3";
+import captureSfxFile from "../sounds/capture.mp3";
 
 const moveSfx = new Audio(moveSfxFile);
+const captureSfx = new Audio(captureSfxFile);
 
 function playAudio(audio) {
     if (!audio) return;
@@ -29,7 +31,7 @@ function Board() {
     const makeMove = (start, end) => {
         const moveResult = game.move(start, end);
         if (!moveResult) return;
-        playAudio(moveSfx);
+        playAudio(moveResult===CSym.CAPTURE? captureSfx: moveSfx);
         setBoard(game.board);
     }
 
