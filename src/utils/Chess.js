@@ -52,6 +52,10 @@ class Chess {
         return true;
     }
 
+    #isLegalPiece(piece, start, end) {
+        
+    }
+
     isLegal(start, end) {
         // check if positions are in board
         if ([...start, ...end].some(i=> i<0 || i>7)) return false;
@@ -60,12 +64,13 @@ class Chess {
         const piece = this.#board[start[0]][start[1]];
         // if there is no piece or if piece does not belong to player
         if (!piece || /[PNBRQK]/.test(piece) !== this.#turn) return false;
-        
+        // if end is own piece
+        const opponent = this.#board[end[0]][end[1]];
+        if (/[PNBRQK]/.test(opponent) === this.#turn) return false;
         
         // check if piece moveset can move to end legally
         // check if path is blocked
-        // if end is own piece
-        // if the move cause own king to be checked
+        // if the move cause own king to be checked// if there's a need to stop check
         return true;
     }
 }
