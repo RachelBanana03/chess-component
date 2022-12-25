@@ -90,13 +90,34 @@ class Chess {
     }
 
     #possibleMoves(piece, start) {
+        const moves = [];
+
         // if pawn, different rules
         if (piece.toLowerCase()==="p") {
+            const [direction, startRank] = piece==="P"? [-1, 6]: [1, 1];
+            // forward direction
+            let curPos = [start[0]+direction, start[1]];
+            console.log(curPos);
+            // if forward pos is not in board 
+            if (!Chess.inBoard(curPos)) return moves;
+            // if forward pos doesn't have piece
+            if (!this.#board[curPos[0]][curPos[1]]) {
+                moves.push(curPos);
+                // if pawn at second/seventh rank
+                if (start[0] === startRank) {
+                    curPos = [curPos[0]+direction, curPos[1]];
+                    if (!this.#board[curPos[0]][curPos[1]]) {
+                        moves.push(curPos);
+                    }
+                }
+            }
+            // captures
             // en passant?
+            // promotion?
+
+            return moves;
         }
 
-        // castling? king checks?
-        const moves = [];
         const {directions, longRange} = Chess.moveSets[piece.toLowerCase()];
         for (const dir of directions) {
             let curPos = start;
@@ -115,6 +136,7 @@ class Chess {
                 if (opponent) break;
             } while (longRange)
         }
+        // castling? king checks?
         return moves;
     }
 
@@ -129,11 +151,11 @@ class Chess {
         // if end is own piece
         const opponent = this.#board[end[0]][end[1]];
         if (opponent && Chess.isWhite(opponent) === this.#isWhiteTurn) return false;
-        
         // check if piece moveset can move to end legally
-        // check if path is blocked
+        const possibleMoves = this.#possibleMoves(piece, start);
+        
         // if the move cause own king to be checked// if there's a need to stop check
-        return true;
+        return possibleMoves.some(move => move[0]===end[0] && move[1]===end[1]);
     }
 }
 
