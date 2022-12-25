@@ -97,7 +97,6 @@ class Chess {
             const [direction, startRank] = piece==="P"? [-1, 6]: [1, 1];
             // forward direction
             let curPos = [start[0]+direction, start[1]];
-            console.log(curPos);
             // if forward pos is not in board 
             if (!Chess.inBoard(curPos)) return moves;
             // if forward pos doesn't have piece
@@ -112,6 +111,15 @@ class Chess {
                 }
             }
             // captures
+            for (const horizontal of [1,-1]) {
+                curPos = [start[0]+direction,start[1]+horizontal];
+                if (!Chess.inBoard(curPos)) continue;
+                const opponent = this.#board[curPos[0]][curPos[1]];
+                // if opponent exists and is not same color as self
+                if (opponent && Chess.isWhite(opponent)!==Chess.isWhite(piece)) {
+                    moves.push(curPos);
+                }
+            }
             // en passant?
             // promotion?
 
