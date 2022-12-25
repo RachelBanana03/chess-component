@@ -41,7 +41,7 @@ function Board() {
 
     const mouseUpHandler = e => {
         const dropCell = document.elementsFromPoint(mousePos[0], mousePos[1])[1];
-        if (dropCell?.dataset && pieceSelected) {
+        if (dropCell?.dataset?.pos && pieceSelected) {
             const newPos = dropCell.dataset.pos.split(",").map(c=>Number(c));
             makeMove(pieceSelected.pos, newPos);
         }
