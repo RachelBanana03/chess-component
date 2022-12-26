@@ -98,7 +98,7 @@ class Chess {
         return this.#isWhiteTurn? "white": "black";
     }
 
-    move(start, end) {
+    move(start, end, forwardCheck=false) {
         const newBoard = this.board;
         const moveSymbol = this.isLegal(start, end, newBoard);
         if (!moveSymbol) return false;
@@ -135,6 +135,9 @@ class Chess {
         // castling through check?
         const newKingPos = piece.toLowerCase()==="k"? end: this.#kingPos[Chess.isWhite(piece)? "K": "k"];
         if (this.#isAttacked(newKingPos, !this.#isWhiteTurn, newBoard)) return false;
+
+        // return without editing anything
+        if (forwardCheck) return moveSymbol;
 
         // ==Edit Actual States==
         this.#board = newBoard;
@@ -177,9 +180,29 @@ class Chess {
         const opponentKingPos = this.#kingPos[Chess.isWhite(piece)? "k": "K"];
         if (this.#isAttacked(opponentKingPos, Chess.isWhite(piece), this.#board)) {
             // check if checkmate
+            // for each possible opponent move, 
+            let notCheckmate = false;
+            for (let i=0; i<8; i++) {
+                for (let j=0; j<8; j++) {
+                    const opponentPiece = this.#board[i][j];
+                    // if not opponent piece, skip
+                    if (!opponentPiece || Chess.isWhite(piece)===Chess.isWhite(opponentPiece)) continue;
+                    // try making a move, break if a move exists
+                    const possibleMoves = this.#possibleMoves(opponentPiece, [i,j], this.#board);
+                    for (const possibleMove of possibleMoves) {
+                        const newSymbol = this.move([i,j], possibleMove.slice(0,2), true);
+                        if (newSymbol) {
+                            notCheckmate = true;
+                            break;
+                        }
+                    }
+                    if (notCheckmate) break;
+                }
+                if (notCheckmate) break;
+            }
 
             // else return check symbol
-            return ChessSymbols.CHECK;
+            return notCheckmate? ChessSymbols.CHECK: ChessSymbols.CHECKMATE;
         }
 
         return moveSymbol;

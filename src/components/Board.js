@@ -38,6 +38,9 @@ function Board() {
 
         // play audio according to symbol
         switch(moveResult) {
+            case CSym.CHECKMATE:
+                console.log("checkmate!");
+                break;
             case CSym.CHECK:
                 playAudio(checkSfx);
                 break;
