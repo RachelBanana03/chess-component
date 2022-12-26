@@ -5,8 +5,7 @@ class Chess {
     #enPassantPos;
     #canCastle;
     // 50-move rule
-    // castling
-    // en passant
+    // draw by repetition
     // is in check
 
     constructor(notation) {
@@ -88,13 +87,6 @@ class Chess {
         if (!moveSymbol) return false;
         const piece = this.#board[start[0]][start[1]];
 
-        // make move
-        this.#board[start[0]][start[1]] = null;
-
-        this.#board[end[0]][end[1]] = piece;
-        this.#moves.push([start, end]);
-        this.#isWhiteTurn = !this.#isWhiteTurn;
-
         // if castling, move rook
         if (moveSymbol===ChessSymbols.CASTLE) {
             // queenside
@@ -102,6 +94,8 @@ class Chess {
                 const rookPiece = this.#board[start[0]][0];
                 this.#board[start[0]][0] = null;
                 this.#board[start[0]][3] = rookPiece;
+                // adjust for imprecise king move
+                end[1] = 2;
             } else {
                 // kingside
                 const rookPiece = this.#board[start[0]][7];
@@ -109,6 +103,14 @@ class Chess {
                 this.#board[start[0]][5] = rookPiece;
             }
         }
+
+        // make move
+        this.#board[start[0]][start[1]] = null;
+
+        this.#board[end[0]][end[1]] = piece;
+        this.#moves.push([start, end]);
+        this.#isWhiteTurn = !this.#isWhiteTurn;
+
         
         // if king moves, remove castling right
         if (piece.toLowerCase()==="k") {
@@ -216,15 +218,18 @@ class Chess {
             } while (longRange)
         }
 
-        // castling
+        // castling (allow unprecise king move)
         if (piece.toLowerCase()==="k") {
-            // queenside castling
+            // queenside castling 
             if (this.#canCastle[piece][0]) {
-                moves.push([start[0], start[1]-2, ChessSymbols.CASTLE]);
+                moves.push(
+                    [start[0], 1, ChessSymbols.CASTLE],
+                    [start[0], 2, ChessSymbols.CASTLE]
+                );
             }
             // kingside castling
             if (this.#canCastle[piece][1]) {
-                moves.push([start[0], start[1]+2, ChessSymbols.CASTLE]);
+                moves.push([start[0], 6, ChessSymbols.CASTLE]);
             }
         }
 
