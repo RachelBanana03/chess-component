@@ -3,6 +3,7 @@ class Chess {
     #moves;
     #isWhiteTurn;
     #enPassantPos;
+    #canCastle;
     // 50-move rule
     // castling
     // en passant
@@ -18,6 +19,10 @@ class Chess {
             this.#moves = [];
             this.#isWhiteTurn = true;
             this.#enPassantPos = null;
+            this.#canCastle = {
+                "k": [true, true], // queenside, kingside
+                "K": [true, true]
+            }
         }
     }
 
@@ -89,6 +94,49 @@ class Chess {
         this.#board[end[0]][end[1]] = piece;
         this.#moves.push([start, end]);
         this.#isWhiteTurn = !this.#isWhiteTurn;
+
+        // if castling, move rook
+        if (moveSymbol===ChessSymbols.CASTLE) {
+            // queenside
+            if (end[1]<start[1]) {
+                const rookPiece = this.#board[start[0]][0];
+                this.#board[start[0]][0] = null;
+                this.#board[start[0]][3] = rookPiece;
+            } else {
+                // kingside
+                const rookPiece = this.#board[start[0]][7];
+                this.#board[start[0]][7] = null;
+                this.#board[start[0]][5] = rookPiece;
+            }
+        }
+        
+        // if king moves, remove castling right
+        if (piece.toLowerCase()==="k") {
+            this.#canCastle[piece] = [false, false];
+        }
+
+        // if rook moves, remove specific castling right
+        if (piece.toLowerCase()==="r") {
+            // black
+            if (start[0]===0) {
+                if (start[1]===0) {
+                    // queenside
+                    this.#canCastle["k"][0] = false;
+                } else if (start[1]===7) {
+                    // kingside
+                    this.#canCastle["k"][1] = false;
+                }
+            } else if (start[0]===7) {
+                // white
+                if (start[1]===0) {
+                    //queenside
+                    this.#canCastle["K"][0] = false;
+                } else if (start[1]===7) {
+                    // kingside
+                    this.#canCastle["K"][1] = false;
+                }
+            }
+        }
 
         // if en passant, clears en passant position
         if (moveSymbol===ChessSymbols.EN_PASSANT) {
@@ -167,7 +215,19 @@ class Chess {
                 if (opponent) break;
             } while (longRange)
         }
-        // castling? king checks?
+
+        // castling
+        if (piece.toLowerCase()==="k") {
+            // queenside castling
+            if (this.#canCastle[piece][0]) {
+                moves.push([start[0], start[1]-2, ChessSymbols.CASTLE]);
+            }
+            // kingside castling
+            if (this.#canCastle[piece][1]) {
+                moves.push([start[0], start[1]+2, ChessSymbols.CASTLE]);
+            }
+        }
+
         return moves;
     }
 
