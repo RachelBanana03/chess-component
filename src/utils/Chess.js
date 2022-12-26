@@ -7,7 +7,6 @@ class Chess {
     #kingPos;
     // 50-move rule
     // draw by repetition
-    // is in check
 
     constructor(notation) {
         if (!notation) {
@@ -133,6 +132,7 @@ class Chess {
         }
 
         //check if king is attacked in new pos
+        // castling through check?
         const newKingPos = piece.toLowerCase()==="k"? end: this.#kingPos[Chess.isWhite(piece)? "K": "k"];
         if (this.#isAttacked(newKingPos, !this.#isWhiteTurn, newBoard)) return false;
 
@@ -173,6 +173,15 @@ class Chess {
         // if pawn advances by two, add end pos, else toggle null
         this.#enPassantPos = moveSymbol===ChessSymbols.ADVANCE? end: null;
 
+        // if opponent king is checked, check if checkmate and return check symbol
+        const opponentKingPos = this.#kingPos[Chess.isWhite(piece)? "k": "K"];
+        if (this.#isAttacked(opponentKingPos, Chess.isWhite(piece), this.#board)) {
+            // check if checkmate
+
+            // else return check symbol
+            return ChessSymbols.CHECK;
+        }
+
         return moveSymbol;
     }
 
@@ -182,6 +191,7 @@ class Chess {
         // if piece is pinned
         // if in checked
         // if move causes a check
+        // stalemate?
 
         // if pawn, different rules
         if (piece.toLowerCase()==="p") {
