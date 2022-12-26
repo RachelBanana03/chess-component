@@ -107,12 +107,18 @@ class Chess {
         // ==Mutates only Temporary Board==
         // if castling
         if (moveSymbol===ChessSymbols.CASTLE) {
+            // if king is under attack, disable castling
+            if (this.#isAttacked(start, !Chess.isWhite(piece), newBoard)) {
+                return false;
+            }
+
             // check if king is castling through check
             // else, move castling rook
-
-            // queenside
             if (end[1]<start[1]) {
-                // 3
+                // queenside
+                if (this.#isAttacked([start[0], 3], !Chess.isWhite(piece), newBoard)) {
+                    return false;
+                }
 
                 const rookPiece = newBoard[start[0]][0];
                 newBoard[start[0]][0] = null;
@@ -121,7 +127,9 @@ class Chess {
                 end[1] = 2;
             } else {
                 // kingside
-                // 5 
+                if (this.#isAttacked([start[0], 5], !Chess.isWhite(piece), newBoard)) {
+                    return false;
+                }
 
                 const rookPiece = newBoard[start[0]][7];
                 newBoard[start[0]][7] = null;
@@ -217,7 +225,6 @@ class Chess {
     #possibleMoves(piece, start, board) {
         const moves = [];
         // stalemate?
-        // castle on check/through check
 
         // if pawn, different rules
         if (piece.toLowerCase()==="p") {
