@@ -210,11 +210,8 @@ class Chess {
 
     #possibleMoves(piece, start, board) {
         const moves = [];
-
-        // if piece is pinned
-        // if in checked
-        // if move causes a check
         // stalemate?
+        // castle on check/through check
 
         // if pawn, different rules
         if (piece.toLowerCase()==="p") {

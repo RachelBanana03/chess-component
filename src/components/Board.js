@@ -6,11 +6,13 @@ import moveSfxFile from "../sounds/move-self.mp3";
 import captureSfxFile from "../sounds/capture.mp3";
 import castleSfxFile from "../sounds/castle.mp3";
 import checkSfxFile from "../sounds/check.mp3";
+import checkmateSfxFile from "../sounds/checkmate.mp3";
 
 const moveSfx = new Audio(moveSfxFile);
 const captureSfx = new Audio(captureSfxFile);
 const castleSfx = new Audio(castleSfxFile);
 const checkSfx = new Audio (checkSfxFile);
+const checkmateSfx = new Audio (checkmateSfxFile);
 
 function playAudio(audio) {
     if (!audio) return;
@@ -39,7 +41,7 @@ function Board() {
         // play audio according to symbol
         switch(moveResult) {
             case CSym.CHECKMATE:
-                console.log("checkmate!");
+                playAudio(checkmateSfx);
                 break;
             case CSym.CHECK:
                 playAudio(checkSfx);
