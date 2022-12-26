@@ -105,10 +105,15 @@ class Chess {
         const piece = newBoard[start[0]][start[1]];
 
         // ==Mutates only Temporary Board==
-        // if castling, move rook
+        // if castling
         if (moveSymbol===ChessSymbols.CASTLE) {
+            // check if king is castling through check
+            // else, move castling rook
+
             // queenside
             if (end[1]<start[1]) {
+                // 3
+
                 const rookPiece = newBoard[start[0]][0];
                 newBoard[start[0]][0] = null;
                 newBoard[start[0]][3] = rookPiece;
@@ -116,6 +121,8 @@ class Chess {
                 end[1] = 2;
             } else {
                 // kingside
+                // 5 
+
                 const rookPiece = newBoard[start[0]][7];
                 newBoard[start[0]][7] = null;
                 newBoard[start[0]][5] = rookPiece;
@@ -131,8 +138,7 @@ class Chess {
             newBoard[this.#enPassantPos[0]][this.#enPassantPos[1]] = null;
         }
 
-        //check if king is attacked in new pos
-        // castling through check?
+        // check if king is attacked in new pos
         const newKingPos = piece.toLowerCase()==="k"? end: this.#kingPos[Chess.isWhite(piece)? "K": "k"];
         if (this.#isAttacked(newKingPos, !this.#isWhiteTurn, newBoard)) return false;
 
@@ -281,14 +287,22 @@ class Chess {
         if (piece.toLowerCase()==="k") {
             // queenside castling 
             if (this.#canCastle[piece][0]) {
-                moves.push(
-                    [start[0], 1, ChessSymbols.CASTLE],
-                    [start[0], 2, ChessSymbols.CASTLE]
-                );
+                // !! check if path is clear
+                const queensidePath = board[start[0]].slice(1,4);
+                if (!queensidePath.some(piece=>piece)) {
+                    moves.push(
+                        [start[0], 1, ChessSymbols.CASTLE],
+                        [start[0], 2, ChessSymbols.CASTLE]
+                    );
+                }
             }
             // kingside castling
             if (this.#canCastle[piece][1]) {
-                moves.push([start[0], 6, ChessSymbols.CASTLE]);
+                // !! check if path is clear
+                const kingsidePath = board[start[0]].slice(5,7);
+                if (!kingsidePath.some(piece=>piece)) {
+                    moves.push([start[0], 6, ChessSymbols.CASTLE]);
+                }
             }
         }
 
