@@ -25,7 +25,7 @@ class Chess {
             }
             this.#kingPos = {
                 "k": [0, 4],
-                "K": [6, 4]
+                "K": [7, 4]
             }
         }
     }
@@ -75,8 +75,16 @@ class Chess {
         
     }
 
-    static isAttacked(pos, attackerIsWhite, board) {
-
+    #isAttacked(pos, attackerIsWhite, board) {
+        for (let i=0; i<8; i++) {
+            for (let j=0; j<8; j++) {
+                const piece = board[i][j];
+                if (!piece || Chess.isWhite(piece)!==attackerIsWhite) continue;
+                const possibleMoves = this.#possibleMoves(piece, [i,j], board);
+                if (possibleMoves.some(p=>p[0]===pos[0] && p[1]===pos[1])) return true;
+            }
+        }
+        return false;
     }
 
     toString() {
@@ -93,7 +101,7 @@ class Chess {
 
     move(start, end) {
         const newBoard = this.board;
-        const moveSymbol = this.isLegal(start, end);
+        const moveSymbol = this.isLegal(start, end, newBoard);
         if (!moveSymbol) return false;
         const piece = newBoard[start[0]][start[1]];
 
@@ -124,15 +132,18 @@ class Chess {
             newBoard[this.#enPassantPos[0]][this.#enPassantPos[1]] = null;
         }
 
-        //check if king is attacked
+        //check if king is attacked in new pos
+        const newKingPos = piece.toLowerCase()==="k"? end: this.#kingPos[Chess.isWhite(piece)? "K": "k"];
+        if (this.#isAttacked(newKingPos, !this.#isWhiteTurn, newBoard)) return false;
 
         // ==Edit Actual States==
         this.#board = newBoard;
         this.#moves.push([start, end]);
         this.#isWhiteTurn = !this.#isWhiteTurn;
 
-         // if king moves, remove castling right
+         // if king moves, change kingPos and remove castling right
          if (piece.toLowerCase()==="k") {
+            this.#kingPos[piece] = end;
             this.#canCastle[piece] = [false, false];
         }
 
@@ -165,7 +176,7 @@ class Chess {
         return moveSymbol;
     }
 
-    #possibleMoves(piece, start) {
+    #possibleMoves(piece, start, board) {
         const moves = [];
 
         // if piece is pinned
@@ -180,12 +191,12 @@ class Chess {
             // if forward pos is not in board 
             if (!Chess.inBoard(curPos)) return moves;
             // if forward pos doesn't have piece
-            if (!this.#board[curPos[0]][curPos[1]]) {
+            if (!board[curPos[0]][curPos[1]]) {
                 moves.push([...curPos, ChessSymbols.MOVE]);
                 // if pawn at second/seventh rank
                 if (start[0] === startRank) {
                     curPos = [curPos[0]+direction, curPos[1]];
-                    if (!this.#board[curPos[0]][curPos[1]]) {
+                    if (!board[curPos[0]][curPos[1]]) {
                         moves.push([...curPos, ChessSymbols.ADVANCE]);
                     }
                 }
@@ -195,7 +206,7 @@ class Chess {
                 // captures
                 curPos = [start[0]+direction,start[1]+horizontal];
                 if (!Chess.inBoard(curPos)) continue;
-                const opponent = this.#board[curPos[0]][curPos[1]];
+                const opponent = board[curPos[0]][curPos[1]];
                 // if opponent exists and is not same color as self
                 if (opponent && Chess.isWhite(opponent)!==Chess.isWhite(piece)) {
                     moves.push([...curPos, ChessSymbols.CAPTURE]);
@@ -226,7 +237,7 @@ class Chess {
                 if (!Chess.inBoard(curPos)) break;
 
                 // if position has piece of same color
-                const opponent = this.#board[curPos[0]][curPos[1]];
+                const opponent = board[curPos[0]][curPos[1]];
                 if (opponent && Chess.isWhite(opponent) === Chess.isWhite(piece)) break;
 
                 moves.push([...curPos, opponent? ChessSymbols.CAPTURE: ChessSymbols.MOVE]);
@@ -254,26 +265,25 @@ class Chess {
         return moves;
     }
 
-    isLegal(start, end) {
+    isLegal(start, end, board) {
         // check if positions are in board
         if (!Chess.inBoard(start, end)) return false;
         // if start and end are the same
         if (start[0]===end[0] && start[1]===end[1]) return false;
-        const piece = this.#board[start[0]][start[1]];
+        const piece = board[start[0]][start[1]];
         // if there is no piece or if piece does not belong to player
         if (!piece || Chess.isWhite(piece) !== this.#isWhiteTurn) return false;
         // if end is own piece
-        const opponent = this.#board[end[0]][end[1]];
+        const opponent = board[end[0]][end[1]];
         if (opponent && Chess.isWhite(opponent) === this.#isWhiteTurn) return false;
         // check if piece moveset can move to end legally
-        const possibleMoves = this.#possibleMoves(piece, start);
+        const possibleMoves = this.#possibleMoves(piece, start, board);
         
         for (const possibleMove of possibleMoves) {
             if (possibleMove[0]!==end[0] || possibleMove[1]!==end[1]) continue;
             return possibleMove[2];
         }
 
-        // if the move cause own king to be checked// if there's a need to stop check
         return false;
     }
 }
