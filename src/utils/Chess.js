@@ -4,6 +4,7 @@ class Chess {
     #isWhiteTurn;
     #enPassantPos;
     #canCastle;
+    #kingPos;
     // 50-move rule
     // draw by repetition
     // is in check
@@ -21,6 +22,10 @@ class Chess {
             this.#canCastle = {
                 "k": [true, true], // queenside, kingside
                 "K": [true, true]
+            }
+            this.#kingPos = {
+                "k": [0, 4],
+                "K": [6, 4]
             }
         }
     }
@@ -70,6 +75,10 @@ class Chess {
         
     }
 
+    static isAttacked(pos, attackerIsWhite, board) {
+
+    }
+
     toString() {
         return this.#board.map(row=>"|" + row.map(piece=> piece??"_").join("|") + "|").join("\n");
     }
@@ -83,37 +92,47 @@ class Chess {
     }
 
     move(start, end) {
+        const newBoard = this.board;
         const moveSymbol = this.isLegal(start, end);
         if (!moveSymbol) return false;
-        const piece = this.#board[start[0]][start[1]];
+        const piece = newBoard[start[0]][start[1]];
 
+        // ==Mutates only Temporary Board==
         // if castling, move rook
         if (moveSymbol===ChessSymbols.CASTLE) {
             // queenside
             if (end[1]<start[1]) {
-                const rookPiece = this.#board[start[0]][0];
-                this.#board[start[0]][0] = null;
-                this.#board[start[0]][3] = rookPiece;
+                const rookPiece = newBoard[start[0]][0];
+                newBoard[start[0]][0] = null;
+                newBoard[start[0]][3] = rookPiece;
                 // adjust for imprecise king move
                 end[1] = 2;
             } else {
                 // kingside
-                const rookPiece = this.#board[start[0]][7];
-                this.#board[start[0]][7] = null;
-                this.#board[start[0]][5] = rookPiece;
+                const rookPiece = newBoard[start[0]][7];
+                newBoard[start[0]][7] = null;
+                newBoard[start[0]][5] = rookPiece;
             }
         }
 
         // make move
-        this.#board[start[0]][start[1]] = null;
+        newBoard[start[0]][start[1]] = null;
+        newBoard[end[0]][end[1]] = piece;
 
-        this.#board[end[0]][end[1]] = piece;
+        // if en passant, clears en passant position
+        if (moveSymbol===ChessSymbols.EN_PASSANT) {
+            newBoard[this.#enPassantPos[0]][this.#enPassantPos[1]] = null;
+        }
+
+        //check if king is attacked
+
+        // ==Edit Actual States==
+        this.#board = newBoard;
         this.#moves.push([start, end]);
         this.#isWhiteTurn = !this.#isWhiteTurn;
 
-        
-        // if king moves, remove castling right
-        if (piece.toLowerCase()==="k") {
+         // if king moves, remove castling right
+         if (piece.toLowerCase()==="k") {
             this.#canCastle[piece] = [false, false];
         }
 
@@ -140,11 +159,6 @@ class Chess {
             }
         }
 
-        // if en passant, clears en passant position
-        if (moveSymbol===ChessSymbols.EN_PASSANT) {
-            this.#board[this.#enPassantPos[0]][this.#enPassantPos[1]] = null;
-        }
-
         // if pawn advances by two, add end pos, else toggle null
         this.#enPassantPos = moveSymbol===ChessSymbols.ADVANCE? end: null;
 
@@ -153,6 +167,10 @@ class Chess {
 
     #possibleMoves(piece, start) {
         const moves = [];
+
+        // if piece is pinned
+        // if in checked
+        // if move causes a check
 
         // if pawn, different rules
         if (piece.toLowerCase()==="p") {
