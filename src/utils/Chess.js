@@ -137,7 +137,7 @@ class Chess {
     getFEN(index = 0, reversed = true) {
         index = reversed? this.#moves.length-1+index: index;
         if (index<0 || index>=this.#moves.length) return false;
-        return this.#moves[this.#moves.length-1][0];
+        return this.#moves[index][0];
     }
 
     #isAttacked(pos, attackerIsWhite, board) {
