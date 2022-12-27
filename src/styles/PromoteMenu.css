@@ -1,0 +1,26 @@
+.PromoteMenu {
+    background-color: white;
+    position: absolute;
+    width: 100%;
+    z-index: 3;
+
+    display: flex;
+    flex-direction: column;
+
+    box-shadow: 2px 2px 8px 1px rgba(145,139,139,0.75);
+    -webkit-box-shadow: 2px 2px 8px 1px rgba(145,139,139,0.75);
+    -moz-box-shadow: 2px 2px 8px 1px rgba(145,139,139,0.75);
+}
+
+.PromoteMenu.reversed {
+    flex-direction: column-reverse;
+    box-shadow: -2px -2px 8px 1px rgba(145,139,139,0.75);
+    -webkit-box-shadow: -2px -2px 8px 1px rgba(145,139,139,0.75);
+    -moz-box-shadow: -2px -2px 8px 1px rgba(145,139,139,0.75);
+}
+
+.PromoteMenu>img {
+    width: 100%;
+    cursor: pointer;
+}
+

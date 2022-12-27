@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import "../styles/Cell.css";
 import chess_pieces from "../images/chess_pieces";
+import PromoteMenu from './PromoteMenu';
 
 function Cell({ piece, className, setPieceSelected, pos, mousePos }) {
     const [isPicked, setIsPicked] = useState(false);
@@ -37,6 +38,9 @@ function Cell({ piece, className, setPieceSelected, pos, mousePos }) {
                 onMouseDown={mouseDownHandler}
                 style={isPicked?cellPos:{}}
             />:null}
+
+            {pos[0]===0 && pos[1]===0? <PromoteMenu isWhite={true} isReversed={false}/>:null}
+            {pos[0]===7 && pos[1]===7? <PromoteMenu isWhite={false} isReversed={true}/>:null}
         </div>
     )
 }
