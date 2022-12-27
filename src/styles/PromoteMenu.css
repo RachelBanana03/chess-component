@@ -14,6 +14,8 @@
 
 .PromoteMenu.reversed {
     flex-direction: column-reverse;
+    bottom:0;
+
     box-shadow: -2px -2px 8px 1px rgba(145,139,139,0.75);
     -webkit-box-shadow: -2px -2px 8px 1px rgba(145,139,139,0.75);
     -moz-box-shadow: -2px -2px 8px 1px rgba(145,139,139,0.75);
