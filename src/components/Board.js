@@ -22,6 +22,31 @@ function playAudio(audio) {
     audio.play();
 }
 
+function playMoveSfx(moveSymbol) {
+    switch (moveSymbol) {
+        case CSym.CAN_PROMOTE:
+            break;
+        case CSym.CHECKMATE:
+            playAudio(checkmateSfx);
+            break;
+        case CSym.CHECK:
+            playAudio(checkSfx);
+            break;
+        case CSym.PROMOTE:
+            playAudio(promoteSfx);
+            break;
+        case CSym.CASTLE:
+            playAudio(castleSfx);
+            break;
+        case CSym.CAPTURE:
+        case CSym.EN_PASSANT:
+            playAudio(captureSfx);
+            break;
+        default:
+            playAudio(moveSfx);
+    }
+}
+
 function useGame() {
     const gameRef = useRef();
     if (!gameRef.current) {
@@ -50,28 +75,7 @@ function Board() {
         }
 
         // play audio according to symbol
-        switch (moveResult) {
-            case CSym.CAN_PROMOTE:
-                break;
-            case CSym.CHECKMATE:
-                playAudio(checkmateSfx);
-                break;
-            case CSym.CHECK:
-                playAudio(checkSfx);
-                break;
-            case CSym.PROMOTE:
-                playAudio(promoteSfx);
-                break;
-            case CSym.CASTLE:
-                playAudio(castleSfx);
-                break;
-            case CSym.CAPTURE:
-            case CSym.EN_PASSANT:
-                playAudio(captureSfx);
-                break;
-            default:
-                playAudio(moveSfx);
-        }
+        playMoveSfx(moveResult);
 
         setBoard(game.board);
     }
@@ -127,6 +131,8 @@ function Board() {
                 }
             </div>
             <input type="text" spellCheck={false} value={game.getFEN()} readOnly/>
+            <br/>
+            <button>Previous</button><button>Next</button>
         </>
     )
 }
