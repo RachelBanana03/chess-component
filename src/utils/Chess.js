@@ -74,6 +74,25 @@ class Chess {
         
     }
 
+    toFEN() {
+        let fen = this.#board.map(rank=>{
+            let count = 0;
+            let rankFen = "";
+            for (const piece of rank) {
+                if (piece) {
+                    rankFen += count? count+piece: piece;
+                    count = 0;
+                } else {
+                    count++;
+                }
+            }
+            if (count) rankFen += count;
+            return rankFen;
+        }).join("/")
+
+        return fen;
+    }
+
     #isAttacked(pos, attackerIsWhite, board) {
         for (let i=0; i<8; i++) {
             for (let j=0; j<8; j++) {
