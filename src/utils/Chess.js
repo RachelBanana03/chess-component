@@ -98,7 +98,7 @@ class Chess {
         return this.#isWhiteTurn? "white": "black";
     }
 
-    move(start, end, forwardCheck=false) {
+    move(start, end, forwardCheck=false, promotePiece=null) {
         const newBoard = this.board;
         const moveSymbol = this.isLegal(start, end, newBoard);
         if (!moveSymbol) return false;
@@ -152,6 +152,17 @@ class Chess {
 
         // return without editing anything
         if (forwardCheck) return moveSymbol;
+
+        // check for promotion
+        if (moveSymbol===ChessSymbols.CAN_PROMOTE) {
+            // check if promote piece is legit
+            if (!promotePiece) return moveSymbol;
+            if (Chess.isWhite(promotePiece)!==Chess.isWhite(piece) || 
+                !/[NBRQ]/i.test(promotePiece)) return false;
+
+            // change piece at board to promote piece
+            newBoard[end[0]][end[1]] = promotePiece;
+        }
 
         // ==Edit Actual States==
         this.#board = newBoard;
@@ -228,14 +239,16 @@ class Chess {
 
         // if pawn, different rules
         if (piece.toLowerCase()==="p") {
-            const [direction, startRank] = piece==="P"? [-1, 6]: [1, 1];
+            const [direction, startRank, endRank] = piece==="P"? [-1, 6, 0]: [1, 1, 7];
             // forward direction
             let curPos = [start[0]+direction, start[1]];
             // if forward pos is not in board 
             if (!Chess.inBoard(curPos)) return moves;
             // if forward pos doesn't have piece
             if (!board[curPos[0]][curPos[1]]) {
-                moves.push([...curPos, ChessSymbols.MOVE]);
+                // if pawn can promote
+                const moveSymbol = curPos[0] === endRank? ChessSymbols.CAN_PROMOTE: ChessSymbols.MOVE;
+                moves.push([...curPos, moveSymbol]);
                 // if pawn at second/seventh rank
                 if (start[0] === startRank) {
                     curPos = [curPos[0]+direction, curPos[1]];
@@ -252,7 +265,9 @@ class Chess {
                 const opponent = board[curPos[0]][curPos[1]];
                 // if opponent exists and is not same color as self
                 if (opponent && Chess.isWhite(opponent)!==Chess.isWhite(piece)) {
-                    moves.push([...curPos, ChessSymbols.CAPTURE]);
+                    // if pawn can promote
+                    const moveSymbol = curPos[0] === endRank? ChessSymbols.CAN_PROMOTE: ChessSymbols.CAPTURE;
+                    moves.push([...curPos, moveSymbol]);
                 }
 
                 // en passant
@@ -346,8 +361,9 @@ const ChessSymbols = {
     CASTLE: Symbol(3),
     ADVANCE: Symbol(4), //pawn's two-square advance
     EN_PASSANT: Symbol(5),
-    PROMOTE: Symbol(6),
-    CHECKMATE: Symbol(7)
+    CAN_PROMOTE: Symbol(6),
+    PROMOTE: Symbol(7),
+    CHECKMATE: Symbol(8)
 }
 
 export default Chess;

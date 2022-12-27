@@ -35,8 +35,12 @@ function Board() {
     const [pieceSelected, setPieceSelected] = useState(null);
 
     const makeMove = (start, end) => {
-        const moveResult = game.move(start, end);
+        let moveResult = game.move(start, end);
         if (!moveResult) return;
+
+        if (moveResult===CSym.CAN_PROMOTE) {
+            moveResult = game.move(start, end, false, "Q")
+        }
 
         // play audio according to symbol
         switch(moveResult) {

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import "../styles/Cell.css";
 import chess_pieces from "../images/chess_pieces";
 
-function Cell({ piece, className, pieceSelected, setPieceSelected, pos, makeMove, mousePos }) {
+function Cell({ piece, className, setPieceSelected, pos, mousePos }) {
     const [isPicked, setIsPicked] = useState(false);
     const cellRef = useRef(null);
     const [cellPos, setCellPos] = useState(null);
