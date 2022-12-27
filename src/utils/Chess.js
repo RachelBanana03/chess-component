@@ -5,6 +5,8 @@ class Chess {
     #enPassantPos;
     #canCastle;
     #kingPos;
+    #halfmoveClock;
+    #fullmoveNum;
     // 50-move rule
     // draw by repetition
 
@@ -26,6 +28,8 @@ class Chess {
                 "k": [0, 4],
                 "K": [7, 4]
             }
+            this.#halfmoveClock = 0;
+            this.#fullmoveNum = 1;
         }
     }
 
@@ -108,7 +112,7 @@ class Chess {
             this.#enPassantPos[1]
         ]): "-";
 
-        return [fen, turn, castlingRights, enPassantTarget].join(" ");
+        return [fen, turn, castlingRights, enPassantTarget, this.#halfmoveClock, this.#fullmoveNum].join(" ");
     }
 
     #isAttacked(pos, attackerIsWhite, board) {
@@ -205,6 +209,8 @@ class Chess {
         // ==Edit Actual States==
         this.#board = newBoard;
         this.#moves.push([start, end]);
+        // if black's turn, increment fullmove
+        if (!this.#isWhiteTurn) this.#fullmoveNum++;
         this.#isWhiteTurn = !this.#isWhiteTurn;
 
          // if king moves, change kingPos and remove castling right
@@ -239,6 +245,7 @@ class Chess {
         // if pawn advances by two, add end pos, else toggle null
         this.#enPassantPos = moveSymbol===ChessSymbols.ADVANCE? end: null;
 
+        // ==Checks and Mates==
         // if opponent king is checked, check if checkmate and return check symbol
         const opponentKingPos = this.#kingPos[Chess.isWhite(piece)? "k": "K"];
         if (this.#isAttacked(opponentKingPos, Chess.isWhite(piece), this.#board)) {
