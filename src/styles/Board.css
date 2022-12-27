@@ -20,3 +20,20 @@ input[type="text"] {
     color: rgb(126, 121, 121);
     background-color: #3c3b39;
 }
+
+button {
+    margin: 20px;
+    width: 50px;
+    border: none;
+    border-radius: 5px;
+    border: solid 1px rgb(89, 85, 85);
+    background-color: #3c3b39;
+    height: 30px;
+    color:rgb(126, 121, 121);
+    font-size: 25px;
+}
+
+button:hover {
+    background-color: #2e2d2b;
+    color: white;
+}

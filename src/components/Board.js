@@ -155,8 +155,8 @@ function Board() {
             </div>
             <input type="text" spellCheck={false} value={game.getFEN(gameIndex, true)} readOnly/>
             <br/>
-            <button onClick={getPrevBoard}>Previous</button>
-            <button onClick={getNextBoard}>Next</button>
+            <button onClick={getPrevBoard}>&#60;</button>
+            <button onClick={getNextBoard}>&#62;</button>
         </>
     )
 }
