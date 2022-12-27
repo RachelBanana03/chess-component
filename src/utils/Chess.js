@@ -94,10 +94,10 @@ class Chess {
     }
 
     browseBoard(index, reversed=false) {
-        index = reversed? this.#moves.length-1-index: index;
+        index = reversed? this.#moves.length-1+index: index;
         if (index<0 || index>=this.#moves.length) return false;
         const [fen, prevMoveSymbol] = this.#moves[index];
-        const nextMoveSymbol = this.#moves[index+1] || null;
+        const nextMoveSymbol = this.#moves[index+1]?.[1] || null;
         return [Chess.toBoard(fen), prevMoveSymbol, nextMoveSymbol];
     }
 
@@ -134,7 +134,9 @@ class Chess {
         return [fen, turn, castlingRights, enPassantTarget, this.#halfmoveClock, this.#fullmoveNum].join(" ");
     }
 
-    getFEN() {
+    getFEN(index = 0, reversed = true) {
+        index = reversed? this.#moves.length-1+index: index;
+        if (index<0 || index>=this.#moves.length) return false;
         return this.#moves[this.#moves.length-1][0];
     }
 

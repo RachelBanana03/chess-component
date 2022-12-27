@@ -61,8 +61,15 @@ function Board() {
     const [mousePos, setMousePos] = useState(null);
     const [pieceSelected, setPieceSelected] = useState(null);
     const [promotionOptions, setPromotionOptions] = useState(null);
+    const [gameIndex, setGameIndex] = useState(0);
 
     const makeMove = (start, end, promoPiece = null) => {
+        if (gameIndex) {
+            setGameIndex(0);
+            setBoard(game.board);
+            return;
+        }
+
         let moveResult = game.move(start, end, false, promoPiece);
         if (!moveResult) return;
 
@@ -87,6 +94,22 @@ function Board() {
             makeMove(start, end, piece);
         }
         setPromotionOptions(null);
+    }
+
+    const getPrevBoard = () => {
+        const prevBoard = game.browseBoard(gameIndex-1, true);
+        if (!prevBoard) return;
+        playMoveSfx(prevBoard[2]); // play next move
+        setGameIndex(prevIndex=>prevIndex-1);
+        setBoard(prevBoard[0]);
+    }
+
+    const getNextBoard = () => {
+        const nextBoard = game.browseBoard(gameIndex+1, true);
+        if (!nextBoard) return;
+        playMoveSfx(nextBoard[1]); // play prev move
+        setGameIndex(prevIndex=>prevIndex+1);
+        setBoard(nextBoard[0]);
     }
 
     const mouseMoveHandler = (e) => {
@@ -130,9 +153,10 @@ function Board() {
                     ))
                 }
             </div>
-            <input type="text" spellCheck={false} value={game.getFEN()} readOnly/>
+            <input type="text" spellCheck={false} value={game.getFEN(gameIndex, true)} readOnly/>
             <br/>
-            <button>Previous</button><button>Next</button>
+            <button onClick={getPrevBoard}>Previous</button>
+            <button onClick={getNextBoard}>Next</button>
         </>
     )
 }
