@@ -30,6 +30,8 @@ class Chess {
             }
             this.#halfmoveClock = 0;
             this.#fullmoveNum = 1;
+
+            this.#moves.push([this.#toFEN(), null]);
         }
     }
 
@@ -82,7 +84,7 @@ class Chess {
         return "abcdefgh"[pos[1]] + (8-pos[0]);
     }
 
-    toFEN() {
+    #toFEN() {
         // describe board
         let fen = this.#board.map(rank=>{
             let count = 0;
@@ -113,6 +115,10 @@ class Chess {
         ]): "-";
 
         return [fen, turn, castlingRights, enPassantTarget, this.#halfmoveClock, this.#fullmoveNum].join(" ");
+    }
+
+    getFEN() {
+        return this.#moves[this.#moves.length-1][0];
     }
 
     #isAttacked(pos, attackerIsWhite, board) {
@@ -208,7 +214,6 @@ class Chess {
 
         // ==Edit Actual States==
         this.#board = newBoard;
-        this.#moves.push([start, end]);
         // if black's turn, increment fullmove
         if (!this.#isWhiteTurn) this.#fullmoveNum++;
         this.#isWhiteTurn = !this.#isWhiteTurn;
@@ -253,7 +258,7 @@ class Chess {
             // 50-move draw?
         }
 
-        // ==Checks and Mates==
+        // ==Checks and Mates | Record fen/symbol==
         // if opponent king is checked, check if checkmate and return check symbol
         const opponentKingPos = this.#kingPos[Chess.isWhite(piece)? "k": "K"];
         if (this.#isAttacked(opponentKingPos, Chess.isWhite(piece), this.#board)) {
@@ -279,10 +284,12 @@ class Chess {
                 if (notCheckmate) break;
             }
 
-            // else return check symbol
-            return notCheckmate? ChessSymbols.CHECK: ChessSymbols.CHECKMATE;
+            // else change to check symbol
+            moveSymbol = notCheckmate? ChessSymbols.CHECK: ChessSymbols.CHECKMATE;
         }
 
+        // record fen and moveSymbol
+        this.#moves.push([this.#toFEN(), moveSymbol]);
         return moveSymbol;
     }
 

@@ -126,7 +126,7 @@ function Board() {
                     ))
                 }
             </div>
-            <input type="text" spellcheck={false} value={game.toFEN()} />
+            <input type="text" spellCheck={false} value={game.getFEN()} readOnly/>
         </>
     )
 }
