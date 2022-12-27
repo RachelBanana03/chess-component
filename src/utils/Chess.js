@@ -245,6 +245,14 @@ class Chess {
         // if pawn advances by two, add end pos, else toggle null
         this.#enPassantPos = moveSymbol===ChessSymbols.ADVANCE? end: null;
 
+        // if piece is pawn, or a capture is performed, reset halfmove clock
+        if (piece.toLowerCase()==="p" || moveSymbol===ChessSymbols.CAPTURE) {
+            this.#halfmoveClock = 0;
+        } else {
+            this.#halfmoveClock++;
+            // 50-move draw?
+        }
+
         // ==Checks and Mates==
         // if opponent king is checked, check if checkmate and return check symbol
         const opponentKingPos = this.#kingPos[Chess.isWhite(piece)? "k": "K"];
