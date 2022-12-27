@@ -12,9 +12,9 @@ import promoteSfxFile from "../sounds/promote.mp3";
 const moveSfx = new Audio(moveSfxFile);
 const captureSfx = new Audio(captureSfxFile);
 const castleSfx = new Audio(castleSfxFile);
-const checkSfx = new Audio (checkSfxFile);
-const checkmateSfx = new Audio (checkmateSfxFile);
-const promoteSfx = new Audio (promoteSfxFile);
+const checkSfx = new Audio(checkSfxFile);
+const checkmateSfx = new Audio(checkmateSfxFile);
+const promoteSfx = new Audio(promoteSfxFile);
 
 function playAudio(audio) {
     if (!audio) return;
@@ -41,7 +41,7 @@ function Board() {
         let moveResult = game.move(start, end, false, promoPiece);
         if (!moveResult) return;
 
-        if (moveResult===CSym.CAN_PROMOTE) {
+        if (moveResult === CSym.CAN_PROMOTE) {
             setPromotionOptions({
                 start,
                 end,
@@ -50,7 +50,7 @@ function Board() {
         }
 
         // play audio according to symbol
-        switch(moveResult) {
+        switch (moveResult) {
             case CSym.CAN_PROMOTE:
                 break;
             case CSym.CHECKMATE:
@@ -72,29 +72,29 @@ function Board() {
             default:
                 playAudio(moveSfx);
         }
-        
+
         setBoard(game.board);
     }
 
     const doPromotion = (piece) => {
         if (!promotionOptions) return;
         if (piece) {
-            const {start, end} = promotionOptions;
+            const { start, end } = promotionOptions;
             makeMove(start, end, piece);
         }
         setPromotionOptions(null);
     }
 
     const mouseMoveHandler = (e) => {
-        const x = e.clientX; 
-        const y = e.clientY; 
-        setMousePos([x,y]);
+        const x = e.clientX;
+        const y = e.clientY;
+        setMousePos([x, y]);
     }
 
     const mouseUpHandler = e => {
         const dropCell = document.elementsFromPoint(mousePos[0], mousePos[1])[1];
         if (dropCell?.dataset?.pos && pieceSelected) {
-            const newPos = dropCell.dataset.pos.split(",").map(c=>Number(c));
+            const newPos = dropCell.dataset.pos.split(",").map(c => Number(c));
             makeMove(pieceSelected.pos, newPos);
         }
         pieceSelected?.setIsPicked?.(false);
@@ -102,29 +102,32 @@ function Board() {
     }
 
     return (
-            <div 
-                className="Board" 
+        <>
+            <div
+                className="Board"
                 onMouseMove={mouseMoveHandler}
                 onMouseUp={mouseUpHandler}
             >
                 {
-                [].concat(...board.map(
-                    (row,i)=>row.map(
-                        (piece,j)=><Cell 
-                            className={i%2===j%2? "white":"black"}
-                            piece={piece} 
-                            pieceSelected={pieceSelected}
-                            setPieceSelected={setPieceSelected}
-                            promotionOptions={promotionOptions}
-                            doPromotion={doPromotion}
-                            mousePos={mousePos}
-                            pos={[i,j]}
-                            key={10*i + j}
-                        />
-                    )
-                ))
+                    [].concat(...board.map(
+                        (row, i) => row.map(
+                            (piece, j) => <Cell
+                                className={i % 2 === j % 2 ? "white" : "black"}
+                                piece={piece}
+                                pieceSelected={pieceSelected}
+                                setPieceSelected={setPieceSelected}
+                                promotionOptions={promotionOptions}
+                                doPromotion={doPromotion}
+                                mousePos={mousePos}
+                                pos={[i, j]}
+                                key={10 * i + j}
+                            />
+                        )
+                    ))
                 }
             </div>
+            <input type="text" spellcheck={false} value={game.toFEN()} />
+        </>
     )
 }
 

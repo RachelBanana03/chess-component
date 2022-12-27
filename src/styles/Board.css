@@ -7,3 +7,16 @@
     height: 640px;
     margin: auto;
 }
+
+input[type="text"] {
+    margin-top: 8px;
+    font-size: 15px;
+    border: none;
+    border: solid 1px rgb(89, 85, 85);
+    border-radius: 2px;
+    line-height: 20px;
+    width: 30%;
+    text-align: center;
+    color: rgb(126, 121, 121);
+    background-color: #3c3b39;
+}
