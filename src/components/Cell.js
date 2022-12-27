@@ -3,10 +3,12 @@ import "../styles/Cell.css";
 import chess_pieces from "../images/chess_pieces";
 import PromoteMenu from './PromoteMenu';
 
-function Cell({ piece, className, setPieceSelected, pos, mousePos }) {
+function Cell({ piece, className, setPieceSelected, pos, mousePos, promotionOptions, doPromotion }) {
     const [isPicked, setIsPicked] = useState(false);
     const cellRef = useRef(null);
     const [cellPos, setCellPos] = useState(null);
+    
+    let promoCell = promotionOptions? promotionOptions.end: [-1, -1];
 
     useEffect(() => {
         if (!cellRef?.current?.getBoundingClientRect || !mousePos) return;
@@ -39,8 +41,11 @@ function Cell({ piece, className, setPieceSelected, pos, mousePos }) {
                 style={isPicked?cellPos:{}}
             />:null}
 
-            {pos[0]===0 && pos[1]===0? <PromoteMenu isWhite={true} isReversed={false}/>:null}
-            {pos[0]===7 && pos[1]===7? <PromoteMenu isWhite={false} isReversed={true}/>:null}
+            {pos[0]===promoCell[0] && pos[1]===promoCell[1]? <PromoteMenu 
+                isWhite={promotionOptions.isWhite} 
+                isReversed={pos[0]===7}
+                doPromotion={doPromotion}
+            />:null}
         </div>
     )
 }

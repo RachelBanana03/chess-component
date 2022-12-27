@@ -100,7 +100,7 @@ class Chess {
 
     move(start, end, forwardCheck=false, promotePiece=null) {
         const newBoard = this.board;
-        const moveSymbol = this.isLegal(start, end, newBoard);
+        let moveSymbol = this.isLegal(start, end, newBoard);
         if (!moveSymbol) return false;
         const piece = newBoard[start[0]][start[1]];
 
@@ -162,6 +162,7 @@ class Chess {
 
             // change piece at board to promote piece
             newBoard[end[0]][end[1]] = promotePiece;
+            moveSymbol = ChessSymbols.PROMOTE;
         }
 
         // ==Edit Actual States==

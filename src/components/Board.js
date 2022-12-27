@@ -7,12 +7,14 @@ import captureSfxFile from "../sounds/capture.mp3";
 import castleSfxFile from "../sounds/castle.mp3";
 import checkSfxFile from "../sounds/check.mp3";
 import checkmateSfxFile from "../sounds/checkmate.mp3";
+import promoteSfxFile from "../sounds/promote.mp3";
 
 const moveSfx = new Audio(moveSfxFile);
 const captureSfx = new Audio(captureSfxFile);
 const castleSfx = new Audio(castleSfxFile);
 const checkSfx = new Audio (checkSfxFile);
 const checkmateSfx = new Audio (checkmateSfxFile);
+const promoteSfx = new Audio (promoteSfxFile);
 
 function playAudio(audio) {
     if (!audio) return;
@@ -33,22 +35,32 @@ function Board() {
     const [board, setBoard] = useState(game.board);
     const [mousePos, setMousePos] = useState(null);
     const [pieceSelected, setPieceSelected] = useState(null);
+    const [promotionOptions, setPromotionOptions] = useState(null);
 
-    const makeMove = (start, end) => {
-        let moveResult = game.move(start, end);
+    const makeMove = (start, end, promoPiece = null) => {
+        let moveResult = game.move(start, end, false, promoPiece);
         if (!moveResult) return;
 
         if (moveResult===CSym.CAN_PROMOTE) {
-            moveResult = game.move(start, end, false, "Q")
+            setPromotionOptions({
+                start,
+                end,
+                isWhite: Chess.isWhite(board[start[0]][start[1]])
+            });
         }
 
         // play audio according to symbol
         switch(moveResult) {
+            case CSym.CAN_PROMOTE:
+                break;
             case CSym.CHECKMATE:
                 playAudio(checkmateSfx);
                 break;
             case CSym.CHECK:
                 playAudio(checkSfx);
+                break;
+            case CSym.PROMOTE:
+                playAudio(promoteSfx);
                 break;
             case CSym.CASTLE:
                 playAudio(castleSfx);
@@ -62,6 +74,13 @@ function Board() {
         }
         
         setBoard(game.board);
+    }
+
+    const doPromotion = (piece) => {
+        if (!promotionOptions) return;
+        const {start, end} = promotionOptions;
+        makeMove(start, end, piece);
+        setPromotionOptions(null);
     }
 
     const mouseMoveHandler = (e) => {
@@ -94,7 +113,8 @@ function Board() {
                             piece={piece} 
                             pieceSelected={pieceSelected}
                             setPieceSelected={setPieceSelected}
-                            makeMove={makeMove}
+                            promotionOptions={promotionOptions}
+                            doPromotion={doPromotion}
                             mousePos={mousePos}
                             pos={[i,j]}
                             key={10*i + j}
