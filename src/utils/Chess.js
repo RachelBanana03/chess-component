@@ -84,6 +84,15 @@ class Chess {
         return "abcdefgh"[pos[1]] + (8-pos[0]);
     }
 
+    static toBoard(fen) {
+        let board = fen.split(" ")[0].split("/");
+        board = board.map(str => {
+            const rank = [...str.replace(/\d/g, x=>" ".repeat(Number(x)))];
+            return rank.map(c=>c===" "? null: c);
+        });
+        return board;
+    }
+
     #toFEN() {
         // describe board
         let fen = this.#board.map(rank=>{
