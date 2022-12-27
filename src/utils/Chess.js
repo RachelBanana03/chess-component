@@ -93,6 +93,14 @@ class Chess {
         return board;
     }
 
+    browseBoard(index, reversed=false) {
+        index = reversed? this.#moves.length-1-index: index;
+        if (index<0 || index>=this.#moves.length) return false;
+        const [fen, prevMoveSymbol] = this.#moves[index];
+        const nextMoveSymbol = this.#moves[index+1] || null;
+        return [Chess.toBoard(fen), prevMoveSymbol, nextMoveSymbol];
+    }
+
     #toFEN() {
         // describe board
         let fen = this.#board.map(rank=>{
@@ -432,7 +440,8 @@ const ChessSymbols = {
     EN_PASSANT: Symbol(5),
     CAN_PROMOTE: Symbol(6),
     PROMOTE: Symbol(7),
-    CHECKMATE: Symbol(8)
+    CHECKMATE: Symbol(8),
+    DRAW: Symbol(9)
 }
 
 export default Chess;
