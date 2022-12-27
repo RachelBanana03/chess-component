@@ -74,7 +74,12 @@ class Chess {
         
     }
 
+    static toNotation(pos) {
+        return "abcdefgh"[pos[1]] + (8-pos[0]);
+    }
+
     toFEN() {
+        // describe board
         let fen = this.#board.map(rank=>{
             let count = 0;
             let rankFen = "";
@@ -88,9 +93,22 @@ class Chess {
             }
             if (count) rankFen += count;
             return rankFen;
-        }).join("/")
+        }).join("/");
 
-        return fen;
+        // add states
+        const turn = this.#isWhiteTurn? "w": "b";
+        const castlingRights = [
+            this.#canCastle["K"][1]? "K": "",
+            this.#canCastle["K"][0]? "Q": "",
+            this.#canCastle["k"][1]? "k": "",
+            this.#canCastle["k"][0]? "q": ""
+        ].join("") || "-";
+        const enPassantTarget = this.#enPassantPos? Chess.toNotation([
+            this.#enPassantPos[0]===4? 5:2, // fen ep position is one square behind pawn
+            this.#enPassantPos[1]
+        ]): "-";
+
+        return [fen, turn, castlingRights, enPassantTarget].join(" ");
     }
 
     #isAttacked(pos, attackerIsWhite, board) {
