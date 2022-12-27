@@ -78,8 +78,10 @@ function Board() {
 
     const doPromotion = (piece) => {
         if (!promotionOptions) return;
-        const {start, end} = promotionOptions;
-        makeMove(start, end, piece);
+        if (piece) {
+            const {start, end} = promotionOptions;
+            makeMove(start, end, piece);
+        }
         setPromotionOptions(null);
     }
 

@@ -22,6 +22,9 @@ function Cell({ piece, className, setPieceSelected, pos, mousePos, promotionOpti
     },[mousePos]);
 
     const mouseDownHandler = (e) => {
+        // cancel promotion
+        if (promotionOptions) doPromotion(null);
+
         setPieceSelected({piece, pos: [...pos], setIsPicked});
         setIsPicked(true);
     }
