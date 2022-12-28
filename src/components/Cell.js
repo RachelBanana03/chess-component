@@ -6,14 +6,14 @@ import PromoteMenu from './PromoteMenu';
 function Cell({ piece, className, setPieceSelected, pos, mousePos, promotionOptions, doPromotion }) {
     const [isPicked, setIsPicked] = useState(false);
     const cellRef = useRef(null);
-    const [cellPos, setCellPos] = useState(null);
+    const [grabbedPieceStyle, setGrabbedPieceStyle] = useState(null);
     
     let promoCell = promotionOptions? promotionOptions.end: [-1, -1];
 
     useEffect(() => {
         if (!cellRef?.current?.getBoundingClientRect || !mousePos) return;
         const cellRect = cellRef?.current?.getBoundingClientRect?.();
-        setCellPos({
+        setGrabbedPieceStyle({
             left: mousePos?.[0] - cellRect?.left - 40,
             top: mousePos?.[1] - cellRect?.top - 40,
             "zIndex": "2",
@@ -22,9 +22,6 @@ function Cell({ piece, className, setPieceSelected, pos, mousePos, promotionOpti
     },[mousePos]);
 
     const mouseDownHandler = (e) => {
-        // cancel promotion
-        if (promotionOptions) doPromotion(null);
-
         setPieceSelected({piece, pos: [...pos], setIsPicked});
         setIsPicked(true);
     }
@@ -41,7 +38,7 @@ function Cell({ piece, className, setPieceSelected, pos, mousePos, promotionOpti
                 alt={piece}
                 draggable={false}
                 onMouseDown={mouseDownHandler}
-                style={isPicked?cellPos:{}}
+                style={isPicked?grabbedPieceStyle:{}}
             />:null}
 
             {pos[0]===promoCell[0] && pos[1]===promoCell[1]? <PromoteMenu 
