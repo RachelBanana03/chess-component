@@ -12,7 +12,7 @@ function useGame() {
     return gameRef.current;
 }
 
-function Board() {
+function Board({width, height}) {
     const game = useGame();
     const [board, setBoard] = useState(game.board);
     const [mousePos, setMousePos] = useState(null);
@@ -94,6 +94,7 @@ function Board() {
                 className="Board"
                 onMouseMove={mouseMoveHandler}
                 onMouseUp={mouseUpHandler}
+                style={{width, height}}
             >
                 {
                     [].concat(...board.map(

@@ -1,3 +1,5 @@
+// !!! bugs: capturing a corner rook doesn't turn castling off
+
 class Chess {
     #board;
     #moves;
