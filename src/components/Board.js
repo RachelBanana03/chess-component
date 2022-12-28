@@ -54,22 +54,23 @@ function Board() {
     }
 
     const getPrevBoard = () => {
-        const prevBoard = game.browseBoard(gameIndex-1, true);
-        if (!prevBoard) return;
-        playMoveSfx(prevBoard[2]); // play next move
+        const prevBoardData = game.browseBoard(gameIndex-1, true);
+        if (!prevBoardData) return;
+        playMoveSfx(prevBoardData[2]); // play next move
         setGameIndex(prevIndex=>prevIndex-1);
-        setBoard(prevBoard[0]);
+        setBoard(prevBoardData[0]);
     }
 
     const getNextBoard = () => {
-        const nextBoard = game.browseBoard(gameIndex+1, true);
-        if (!nextBoard) return;
-        playMoveSfx(nextBoard[1]); // play prev move
+        const nextBoardData = game.browseBoard(gameIndex+1, true);
+        if (!nextBoardData) return;
+        playMoveSfx(nextBoardData[1]); // play prev move
         setGameIndex(prevIndex=>prevIndex+1);
-        setBoard(nextBoard[0]);
+        setBoard(nextBoardData[0]);
     }
 
     const mouseMoveHandler = (e) => {
+        // get mouse position relative to view port
         const x = e.clientX;
         const y = e.clientY;
         setMousePos([x, y]);
@@ -77,10 +78,12 @@ function Board() {
 
     const mouseUpHandler = e => {
         const dropCell = document.elementsFromPoint(mousePos[0], mousePos[1])[1];
+        // if valid square to drop
         if (dropCell?.dataset?.pos && pieceSelected) {
             const newPos = dropCell.dataset.pos.split(",").map(c => Number(c));
             makeMove(pieceSelected.pos, newPos);
         }
+        // drop piece and set selected piece to null
         pieceSelected?.setIsPicked?.(false);
         setPieceSelected(null);
     }
@@ -98,7 +101,6 @@ function Board() {
                             (piece, j) => <Cell
                                 className={i % 2 === j % 2 ? "white" : "black"}
                                 piece={piece}
-                                pieceSelected={pieceSelected}
                                 setPieceSelected={setPieceSelected}
                                 promotionOptions={promotionOptions}
                                 doPromotion={doPromotion}

@@ -11,11 +11,12 @@ function Cell({ piece, className, setPieceSelected, pos, mousePos, promotionOpti
     let promoCell = promotionOptions? promotionOptions.end: [-1, -1];
 
     useEffect(() => {
-        if (!cellRef?.current?.getBoundingClientRect || !mousePos) return;
-        const cellRect = cellRef?.current?.getBoundingClientRect?.();
+        // set positioning and style for grabbed piece
+        if (!cellRef?.current?.getBoundingClientRect?.() || !mousePos) return;
+        const cellRect = cellRef.current.getBoundingClientRect();
         setGrabbedPieceStyle({
-            left: mousePos?.[0] - cellRect?.left - 40,
-            top: mousePos?.[1] - cellRect?.top - 40,
+            left: mousePos?.[0] - cellRect.left - cellRect.width/2,
+            top: mousePos?.[1] - cellRect.top - cellRect.height/2,
             "zIndex": "2",
             "cursor": "grabbing"
         })
