@@ -66,7 +66,8 @@ function Board({width, height}) {
     }
 
     const resetBoard = () => {
-        game.createBoard(null);
+        const initialFen = game.getFEN(0, false);
+        game.createBoard(initialFen);
         setGameIndex(0);
         setBoard(game.board);
         setFenValue(game.getFEN(0, true));
