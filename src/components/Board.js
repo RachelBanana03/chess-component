@@ -100,8 +100,20 @@ function Board({width, height}) {
         setPieceSelected(null);
     }
 
-    const fenInputHandler = e => {
+    const fenInputChangeHandler = e => {
         setFenValue(e.target.value);
+    }
+
+    const fenInputKeydownHandler = e => {
+        if (e.key === "Enter") {
+            console.log(fenValue);
+        }
+    }
+
+    const fenInputBlurHandler = e => {
+        if (!e.target.value || e.target.value.length === 0) {
+            setFenValue(game.getFEN(gameIndex, true));
+        }
     }
 
     return (
@@ -129,7 +141,14 @@ function Board({width, height}) {
                     ))
                 }
             </div>
-            <input type="text" spellCheck={false} value={fenValue} onChange={fenInputHandler}/>
+            <input 
+                type="text" 
+                spellCheck={false} 
+                value={fenValue} 
+                onChange={fenInputChangeHandler}
+                onBlur={fenInputBlurHandler}
+                onKeyDown={fenInputKeydownHandler}
+            />
             <br/>
             <button onClick={resetBoard}>&#8634;</button>
             <button onClick={getPrevBoard}>&#60;</button>
