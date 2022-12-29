@@ -106,7 +106,15 @@ function Board({width, height}) {
 
     const fenInputKeydownHandler = e => {
         if (e.key === "Enter") {
-            console.log(fenValue);
+            // if fen equals to current board, return
+            if (fenValue === game.getFEN(gameIndex, true)) return;
+            
+            // try create board
+            if (game.createBoard(fenValue)) {
+                setGameIndex(0);
+                setBoard(game.board);
+                setFenValue(fenValue);
+            };
         }
     }
 
