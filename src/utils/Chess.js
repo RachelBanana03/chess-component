@@ -91,11 +91,16 @@ class Chess {
         }
         for (const rank of board) {
             let fileCount = 0;
+            let lastCharWasDigit = false;
             for (const c of rank) {
                 if (/[1-8]/.test(c)) {
+                    // check if consecutive digits
+                    if (lastCharWasDigit) return false;
+                    lastCharWasDigit = true;
                     // empty space
                     fileCount += Number(c);
                 } else if (/[PNBRQK]/i.test(c)) {
+                    lastCharWasDigit = false;
                     // a piece
                     fileCount += 1;
                     pieceCounter[Chess.isWhite(c)? "white": "black"] += 1;
