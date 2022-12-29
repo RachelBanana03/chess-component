@@ -134,6 +134,10 @@ class Chess {
         return "abcdefgh"[pos[1]] + (8-pos[0]);
     }
 
+    static toPos(notation) {
+        return [8-Number(notation[1]), "abcdefgh".indexOf(notation[0])];
+    }
+
     // internal to board, doesn't check for valid fen or return states
     // createBoard should be used on a new Chess instance for external fen-to-board
     static #toBoard(fen) {
@@ -177,6 +181,31 @@ class Chess {
             this.#moves.push([this.#toFEN(), null]);
             return true;
         }
+        if (Chess.isFEN(notation)) {
+            const [boardFen, turn, castling, enpassant, halfmove, fullmove] = notation.split(" ");
+            this.#board = Chess.#toBoard(boardFen);
+            this.#moves = [];
+            this.#isWhiteTurn = turn === "w";
+
+            if (enpassant==="-") {
+                this.#enPassantPos = null;
+            } else {
+                const epPos = Chess.toPos(enpassant);
+                this.#enPassantPos = [epPos[0]===5? 4: 3, epPos[1]];
+            }
+
+            this.#canCastle = {
+                "k": [castling.includes("q"), castling.includes("k")],
+                "K": [castling.includes("Q"), castling.includes("K")]
+            };
+            this.#halfmoveClock = Number(halfmove);
+            this.#fullmoveNum = Number(fullmove);
+
+            this.#moves.push([this.#toFEN(), null]);
+
+            return true;
+        }
+        return false;
     }
 
     #toFEN() {
