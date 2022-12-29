@@ -69,6 +69,12 @@ function Board({width, height}) {
         setBoard(nextBoardData[0]);
     }
 
+    const resetBoard = () => {
+        game.createBoard(null);
+        setGameIndex(0);
+        setBoard(game.board);
+    }
+
     const mouseMoveHandler = (e) => {
         // get mouse position relative to view port
         const x = e.clientX;
@@ -115,6 +121,7 @@ function Board({width, height}) {
             </div>
             <input type="text" spellCheck={false} value={game.getFEN(gameIndex, true)} readOnly/>
             <br/>
+            <button onClick={resetBoard}>&#8634;</button>
             <button onClick={getPrevBoard}>&#60;</button>
             <button onClick={getNextBoard}>&#62;</button>
         </>

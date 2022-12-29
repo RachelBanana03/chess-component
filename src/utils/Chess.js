@@ -13,28 +13,7 @@ class Chess {
     // draw by repetition
 
     constructor(notation) {
-        if (!notation) {
-            this.#board = Array.from({length:8}, ()=>Array.from({length:8}, ()=>null));
-            this.#board[0] = ["r", "n", "b", "q", "k", "b", "n" ,"r"];
-            this.#board[1] = ["p", "p", "p", "p", "p", "p", "p", "p"];
-            this.#board[6] = ["P", "P", "P", "P", "P", "P", "P", "P"];
-            this.#board[7] = ["R", "N", "B", "Q", "K", "B", "N", "R"];
-            this.#moves = [];
-            this.#isWhiteTurn = true;
-            this.#enPassantPos = null;
-            this.#canCastle = {
-                "k": [true, true], // queenside, kingside
-                "K": [true, true]
-            }
-            this.#kingPos = {
-                "k": [0, 4],
-                "K": [7, 4]
-            }
-            this.#halfmoveClock = 0;
-            this.#fullmoveNum = 1;
-
-            this.#moves.push([this.#toFEN(), null]);
-        }
+        this.createBoard(notation);
     }
 
     static moveSets = {
@@ -75,7 +54,71 @@ class Chess {
     }
 
     static isFEN(str) {
+        if (!str || typeof str!=="string") return false;
 
+        // 6 fields
+        const fields = str.split(" ");
+        if (fields.length !== 6) return false;
+        const [boardFen, turn, castling, enpassant, halfmove, fullmove] = fields;
+
+        // 2nd: turn
+        // w or b
+        if (turn!=="w" && turn!=="b") return false;
+
+        // 3rd: castling
+        // KQkq in order or -
+        if (castling!=="-" && !/^K?Q?k?q?$/.test(castling)) return false;
+        
+        // 4th: en passant
+        // coordinate (only 3rd or 6th ranks) or -
+        if (enpassant!=="-" && !/^[a-h][36]$/.test(enpassant)) return false;
+
+        // 5th: half moves (digits)
+        // 6th full moves (digits)
+        if (!/^\d+$/.test(halfmove) || !/^\d+$/.test(fullmove)) return false;
+
+        // 1st: board
+        const board = boardFen.split("/");
+        // 8 ranks
+        if (board.length !== 8) return false;
+        const pieceCounter = {
+            k: 0,
+            K: 0,
+            p: 0,
+            P: 0,
+            black: 0,
+            white: 0
+        }
+        for (const rank of board) {
+            let fileCount = 0;
+            for (const c of rank) {
+                if (/[1-8]/.test(c)) {
+                    // empty space
+                    fileCount += Number(c);
+                } else if (/[PNBRQK]/i.test(c)) {
+                    // a piece
+                    fileCount += 1;
+                    pieceCounter[Chess.isWhite(c)? "white": "black"] += 1;
+                    if (/[KP]/i.test(c)) pieceCounter[c] += 1;
+                } else {
+                    // invalid character
+                    return false;
+                }
+            }
+
+            // 8 files
+            if (fileCount !== 8) return false;
+        }
+
+        // one king
+        // at most 8 pawns per side
+        // at most 16 pieces per side
+        return pieceCounter["k"] === 1 && 
+            pieceCounter["K"] === 1 &&
+            pieceCounter["p"] <= 8 &&
+            pieceCounter["P"] <= 8 &&
+            pieceCounter["white"] <= 16 &&
+            pieceCounter["black"] <= 16;
     }
 
     static isPGN(str) {
@@ -101,6 +144,32 @@ class Chess {
         const [fen, prevMoveSymbol] = this.#moves[index];
         const nextMoveSymbol = this.#moves[index+1]?.[1] || null;
         return [Chess.toBoard(fen), prevMoveSymbol, nextMoveSymbol];
+    }
+
+    createBoard(notation) {
+        if (!notation) {
+            this.#board = Array.from({length:8}, ()=>Array.from({length:8}, ()=>null));
+            this.#board[0] = ["r", "n", "b", "q", "k", "b", "n" ,"r"];
+            this.#board[1] = ["p", "p", "p", "p", "p", "p", "p", "p"];
+            this.#board[6] = ["P", "P", "P", "P", "P", "P", "P", "P"];
+            this.#board[7] = ["R", "N", "B", "Q", "K", "B", "N", "R"];
+            this.#moves = [];
+            this.#isWhiteTurn = true;
+            this.#enPassantPos = null;
+            this.#canCastle = {
+                "k": [true, true], // queenside, kingside
+                "K": [true, true]
+            }
+            this.#kingPos = {
+                "k": [0, 4],
+                "K": [7, 4]
+            }
+            this.#halfmoveClock = 0;
+            this.#fullmoveNum = 1;
+
+            this.#moves.push([this.#toFEN(), null]);
+            return true;
+        }
     }
 
     #toFEN() {
