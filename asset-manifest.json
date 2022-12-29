@@ -1,0 +1,33 @@
+{
+  "files": {
+    "main.css": "/https//RachelBanana03.github.io/chess-component/static/css/main.de16d5f9.css",
+    "main.js": "/https//RachelBanana03.github.io/chess-component/static/js/main.da3e13f7.js",
+    "static/js/787.497f1025.chunk.js": "/https//RachelBanana03.github.io/chess-component/static/js/787.497f1025.chunk.js",
+    "static/media/castle.mp3": "/https//RachelBanana03.github.io/chess-component/static/media/castle.172850519365eced4431.mp3",
+    "static/media/checkmate.mp3": "/https//RachelBanana03.github.io/chess-component/static/media/checkmate.fe8be0faa9d981b6aa27.mp3",
+    "static/media/capture.mp3": "/https//RachelBanana03.github.io/chess-component/static/media/capture.79c343c9a73327f96d37.mp3",
+    "static/media/check.mp3": "/https//RachelBanana03.github.io/chess-component/static/media/check.62f67ffa83cdf86743ab.mp3",
+    "static/media/promote.mp3": "/https//RachelBanana03.github.io/chess-component/static/media/promote.09cdce29c0eba63dab64.mp3",
+    "static/media/move-self.mp3": "/https//RachelBanana03.github.io/chess-component/static/media/move-self.f4280e96965e14433c3b.mp3",
+    "static/media/rook_black.svg": "/https//RachelBanana03.github.io/chess-component/static/media/rook_black.fdc575582c2cbe2ec82093702945226f.svg",
+    "static/media/knight_black.svg": "/https//RachelBanana03.github.io/chess-component/static/media/knight_black.7930be9e07b51bc0e069b1d77e31261a.svg",
+    "static/media/king_black.svg": "/https//RachelBanana03.github.io/chess-component/static/media/king_black.6c8cc8fabe5215cc854dec67ee7781fd.svg",
+    "static/media/queen_black.svg": "/https//RachelBanana03.github.io/chess-component/static/media/queen_black.cf388bf415c0d33ec16f23593b8d0d91.svg",
+    "static/media/knight_white.svg": "/https//RachelBanana03.github.io/chess-component/static/media/knight_white.d47944d2cee4f8c707d1907706c142fa.svg",
+    "static/media/bishop_black.svg": "/https//RachelBanana03.github.io/chess-component/static/media/bishop_black.04932f63ef10dcdee115b649286230f5.svg",
+    "static/media/bishop_white.svg": "/https//RachelBanana03.github.io/chess-component/static/media/bishop_white.aa411d5809c6380713b4312d55aafc53.svg",
+    "static/media/rook_white.svg": "/https//RachelBanana03.github.io/chess-component/static/media/rook_white.9e48b84f189eea24339f8a679e7a664f.svg",
+    "static/media/queen_white.svg": "/https//RachelBanana03.github.io/chess-component/static/media/queen_white.7a1aecff0f22ff68c43f9b7f8a81d0b4.svg",
+    "index.html": "/https//RachelBanana03.github.io/chess-component/index.html",
+    "static/media/pawn_black.svg": "/https//RachelBanana03.github.io/chess-component/static/media/pawn_black.be5d44ca5ee868885d216188996e3a00.svg",
+    "static/media/pawn_white.svg": "/https//RachelBanana03.github.io/chess-component/static/media/pawn_white.50273cc6d86861932d0a01c38274009a.svg",
+    "static/media/king_white.svg": "/https//RachelBanana03.github.io/chess-component/static/media/king_white.5d58f1999749c1b5ef5bc1699c38b2f7.svg",
+    "main.de16d5f9.css.map": "/https//RachelBanana03.github.io/chess-component/static/css/main.de16d5f9.css.map",
+    "main.da3e13f7.js.map": "/https//RachelBanana03.github.io/chess-component/static/js/main.da3e13f7.js.map",
+    "787.497f1025.chunk.js.map": "/https//RachelBanana03.github.io/chess-component/static/js/787.497f1025.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.de16d5f9.css",
+    "static/js/main.da3e13f7.js"
+  ]
+}
