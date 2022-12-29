@@ -4,16 +4,17 @@ import Chess, { ChessSymbols as CSym } from "../utils/Chess";
 import "../styles/Board.css";
 import { playMoveSfx } from '../utils/chessAudio';
 
-function useGame() {
+function useGame(fen) {
     const gameRef = useRef();
     if (!gameRef.current) {
-        gameRef.current = new Chess();
+        if (typeof fen === "string") fen = fen.trim();
+        gameRef.current = new Chess(Chess.isFEN(fen)? fen: null);
     }
     return gameRef.current;
 }
 
-function Board({width, height}) {
-    const game = useGame();
+function Board({width, height, children}) {
+    const game = useGame(children);
     const [board, setBoard] = useState(game.board);
     const [mousePos, setMousePos] = useState(null);
     const [pieceSelected, setPieceSelected] = useState(null);
