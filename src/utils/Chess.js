@@ -198,6 +198,18 @@ class Chess {
                 "k": [castling.includes("q"), castling.includes("k")],
                 "K": [castling.includes("Q"), castling.includes("K")]
             };
+            this.#kingPos = {
+                "k": [0, 4],
+                "K": [7, 4]
+            }
+            for (let i=0; i<8; i++) {
+                for (let j=0; j<8; j++) {
+                    const piece = this.#board[i][j];
+                    if (piece && piece.toLowerCase()==="k") {
+                        this.#kingPos[piece] = [i, j];
+                    }
+                }
+            }
             this.#halfmoveClock = Number(halfmove);
             this.#fullmoveNum = Number(fullmove);
 
