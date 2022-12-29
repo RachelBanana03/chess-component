@@ -553,16 +553,16 @@ class Chess {
 }
 
 const ChessSymbols = {
-    MOVE: Symbol(0),
-    CAPTURE: Symbol(1),
-    CHECK: Symbol(2),
-    CASTLE: Symbol(3),
-    ADVANCE: Symbol(4), //pawn's two-square advance
-    EN_PASSANT: Symbol(5),
-    CAN_PROMOTE: Symbol(6),
-    PROMOTE: Symbol(7),
-    CHECKMATE: Symbol(8),
-    DRAW: Symbol(9)
+    MOVE: "move",
+    CAPTURE: "capture",
+    CHECK: "check",
+    CASTLE: "castle",
+    ADVANCE: "advance", //pawn's two-square advance
+    EN_PASSANT: "en_passant",
+    CAN_PROMOTE: "can_promote",
+    PROMOTE: "promote",
+    CHECKMATE: "checkmate",
+    DRAW: "draw"
 }
 
 export default Chess;
