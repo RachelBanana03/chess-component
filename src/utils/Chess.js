@@ -134,7 +134,8 @@ class Chess {
         return "abcdefgh"[pos[1]] + (8-pos[0]);
     }
 
-    static toBoard(fen) {
+    // internal to board, doesn't check for valid fen or return states
+    static #toBoard(fen) {
         let board = fen.split(" ")[0].split("/");
         board = board.map(str => {
             const rank = [...str.replace(/\d/g, x=>" ".repeat(Number(x)))];
@@ -148,7 +149,7 @@ class Chess {
         if (index<0 || index>=this.#moves.length) return false;
         const [fen, prevMoveSymbol] = this.#moves[index];
         const nextMoveSymbol = this.#moves[index+1]?.[1] || null;
-        return [Chess.toBoard(fen), prevMoveSymbol, nextMoveSymbol];
+        return [Chess.#toBoard(fen), prevMoveSymbol, nextMoveSymbol];
     }
 
     createBoard(notation) {
