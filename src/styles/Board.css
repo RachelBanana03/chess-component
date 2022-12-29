@@ -3,8 +3,8 @@
     justify-content: center;
     grid-template-columns: repeat(8, 1fr);
     grid-template-rows: repeat(8, 1fr);
-    width: 640px;
-    height: 640px;
+    width: max(80vmin, 480px);
+    height: max(80vmin, 480px);
     margin: auto;
 }
 
@@ -15,7 +15,7 @@ input[type="text"] {
     border: solid 1px rgb(89, 85, 85);
     border-radius: 2px;
     line-height: 20px;
-    width: 560px;
+    width: max(60vmin, 480px);
     text-align: center;
     color: rgb(126, 121, 121);
     background-color: #3c3b39;
