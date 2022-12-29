@@ -135,6 +135,7 @@ class Chess {
     }
 
     // internal to board, doesn't check for valid fen or return states
+    // createBoard should be used on a new Chess instance for external fen-to-board
     static #toBoard(fen) {
         let board = fen.split(" ")[0].split("/");
         board = board.map(str => {

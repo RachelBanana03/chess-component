@@ -19,11 +19,13 @@ function Board({width, height}) {
     const [pieceSelected, setPieceSelected] = useState(null);
     const [promotionOptions, setPromotionOptions] = useState(null);
     const [gameIndex, setGameIndex] = useState(0);
+    const [fenValue, setFenValue] = useState(game.getFEN(gameIndex, true));
 
     const makeMove = (start, end, promoPiece = null) => {
         if (gameIndex) {
             setGameIndex(0);
             setBoard(game.board);
+            setFenValue(game.getFEN(0, true));
             return;
         }
 
@@ -42,6 +44,32 @@ function Board({width, height}) {
         playMoveSfx(moveResult);
 
         setBoard(game.board);
+        setFenValue(game.getFEN(0, true));
+    }
+
+    const getPrevBoard = () => {
+        const prevBoardData = game.browseBoard(gameIndex-1, true);
+        if (!prevBoardData) return;
+        playMoveSfx(prevBoardData[2]); // play next move
+        setGameIndex(prevIndex=>prevIndex-1);
+        setBoard(prevBoardData[0]);
+        setFenValue(game.getFEN(gameIndex-1, true));
+    }
+
+    const getNextBoard = () => {
+        const nextBoardData = game.browseBoard(gameIndex+1, true);
+        if (!nextBoardData) return;
+        playMoveSfx(nextBoardData[1]); // play prev move
+        setGameIndex(prevIndex=>prevIndex+1);
+        setBoard(nextBoardData[0]);
+        setFenValue(game.getFEN(gameIndex+1, true));
+    }
+
+    const resetBoard = () => {
+        game.createBoard(null);
+        setGameIndex(0);
+        setBoard(game.board);
+        setFenValue(game.getFEN(0, true));
     }
 
     const doPromotion = (piece) => {
@@ -51,28 +79,6 @@ function Board({width, height}) {
             makeMove(start, end, piece);
         }
         setPromotionOptions(null);
-    }
-
-    const getPrevBoard = () => {
-        const prevBoardData = game.browseBoard(gameIndex-1, true);
-        if (!prevBoardData) return;
-        playMoveSfx(prevBoardData[2]); // play next move
-        setGameIndex(prevIndex=>prevIndex-1);
-        setBoard(prevBoardData[0]);
-    }
-
-    const getNextBoard = () => {
-        const nextBoardData = game.browseBoard(gameIndex+1, true);
-        if (!nextBoardData) return;
-        playMoveSfx(nextBoardData[1]); // play prev move
-        setGameIndex(prevIndex=>prevIndex+1);
-        setBoard(nextBoardData[0]);
-    }
-
-    const resetBoard = () => {
-        game.createBoard(null);
-        setGameIndex(0);
-        setBoard(game.board);
     }
 
     const mouseMoveHandler = (e) => {
@@ -92,6 +98,10 @@ function Board({width, height}) {
         // drop piece and set selected piece to null
         pieceSelected?.setIsPicked?.(false);
         setPieceSelected(null);
+    }
+
+    const fenInputHandler = e => {
+        setFenValue(e.target.value);
     }
 
     return (
@@ -119,7 +129,7 @@ function Board({width, height}) {
                     ))
                 }
             </div>
-            <input type="text" spellCheck={false} value={game.getFEN(gameIndex, true)} readOnly/>
+            <input type="text" spellCheck={false} value={fenValue} onChange={fenInputHandler}/>
             <br/>
             <button onClick={resetBoard}>&#8634;</button>
             <button onClick={getPrevBoard}>&#60;</button>
