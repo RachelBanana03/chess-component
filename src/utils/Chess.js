@@ -307,7 +307,7 @@ class Chess {
         return [fen, turn, castlingRights, enPassantTarget, this.#halfmoveClock, this.#fullmoveNum].join(" ");
     }
 
-    getFEN(index = 0, reversed = true) {
+    getFEN(index = 0, reversed = false) {
         index = reversed? this.#moves.length-1+index: index;
         if (index<0 || index>=this.#moves.length) return false;
         return this.#moves[index][0];

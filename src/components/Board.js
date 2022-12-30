@@ -18,9 +18,9 @@ function useGame(notation) {
 
 function Board({width, height, children}) {
     const game = useGame(children);
-    const [board, setBoard] = useState(game.browseBoard(0, false)[0]);
-    const [gameIndex, setGameIndex] = useState(1-game.movesLength);
-    const [fenValue, setFenValue] = useState(game.getFEN(gameIndex, true));
+    const [board, setBoard] = useState(game.browseBoard(0)[0]);
+    const [gameIndex, setGameIndex] = useState(0); 
+    const [fenValue, setFenValue] = useState(game.getFEN(0)); 
 
     const [mousePos, setMousePos] = useState(null);
     const [pieceSelected, setPieceSelected] = useState(null);
@@ -28,10 +28,10 @@ function Board({width, height, children}) {
     
 
     const makeMove = (start, end, promoPiece = null) => {
-        if (gameIndex) {
-            setGameIndex(0);
+        if (gameIndex!==game.movesLength-1) { 
+            setGameIndex(game.movesLength-1); 
             setBoard(game.board);
-            setFenValue(game.getFEN(0, true));
+            setFenValue(game.getFEN(game.movesLength-1)); 
             return;
         }
 
@@ -48,35 +48,35 @@ function Board({width, height, children}) {
 
         // play audio according to symbol
         playMoveSfx(moveResult);
-
+        setGameIndex(game.movesLength-1);
         setBoard(game.board);
-        setFenValue(game.getFEN(0, true));
+        setFenValue(game.getFEN(game.movesLength-1)); 
     }
 
     const getPrevBoard = () => {
-        const prevBoardData = game.browseBoard(gameIndex-1, true);
+        const prevBoardData = game.browseBoard(gameIndex-1); 
         if (!prevBoardData) return;
         playMoveSfx(prevBoardData[2]); // play next move
         setGameIndex(prevIndex=>prevIndex-1);
         setBoard(prevBoardData[0]);
-        setFenValue(game.getFEN(gameIndex-1, true));
+        setFenValue(game.getFEN(gameIndex-1));  
     }
 
     const getNextBoard = () => {
-        const nextBoardData = game.browseBoard(gameIndex+1, true);
+        const nextBoardData = game.browseBoard(gameIndex+1); 
         if (!nextBoardData) return;
         playMoveSfx(nextBoardData[1]); // play prev move
         setGameIndex(prevIndex=>prevIndex+1);
         setBoard(nextBoardData[0]);
-        setFenValue(game.getFEN(gameIndex+1, true));
+        setFenValue(game.getFEN(gameIndex+1)); 
     }
 
     const resetBoard = () => {
-        const initialFen = game.getFEN(0, false);
+        const initialFen = game.getFEN(0); 
         game.createBoard(initialFen);
         setGameIndex(0);
         setBoard(game.board);
-        setFenValue(game.getFEN(0, true));
+        setFenValue(game.getFEN(0)); 
     }
 
     const doPromotion = (piece) => {
@@ -114,7 +114,7 @@ function Board({width, height, children}) {
     const fenInputKeydownHandler = e => {
         if (e.key === "Enter") {
             // if fen equals to current board, return
-            if (fenValue === game.getFEN(gameIndex, true)) return;
+            if (fenValue === game.getFEN(gameIndex)) return; 
             
             // try create board
             if (game.createBoard(fenValue)) {
@@ -127,7 +127,7 @@ function Board({width, height, children}) {
 
     const fenInputBlurHandler = e => {
         if (!e.target.value || e.target.value.length === 0) {
-            setFenValue(game.getFEN(gameIndex, true));
+            setFenValue(game.getFEN(gameIndex)); 
         }
     }
 
