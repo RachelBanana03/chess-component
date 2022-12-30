@@ -157,6 +157,10 @@ class Chess {
         return [Chess.#toBoard(fen), prevMoveSymbol, nextMoveSymbol];
     }
 
+    get movesLength() {
+        return this.#moves.length;
+    }
+
     createBoard(notation) {
         // if no notation, use starting position
         if (!notation) {

@@ -18,12 +18,14 @@ function useGame(notation) {
 
 function Board({width, height, children}) {
     const game = useGame(children);
-    const [board, setBoard] = useState(game.board);
+    const [board, setBoard] = useState(game.browseBoard(0, false)[0]);
+    const [gameIndex, setGameIndex] = useState(1-game.movesLength);
+    const [fenValue, setFenValue] = useState(game.getFEN(gameIndex, true));
+
     const [mousePos, setMousePos] = useState(null);
     const [pieceSelected, setPieceSelected] = useState(null);
     const [promotionOptions, setPromotionOptions] = useState(null);
-    const [gameIndex, setGameIndex] = useState(0);
-    const [fenValue, setFenValue] = useState(game.getFEN(gameIndex, true));
+    
 
     const makeMove = (start, end, promoPiece = null) => {
         if (gameIndex) {
