@@ -260,7 +260,10 @@ class Chess {
         console.log(moves);
 
         for (const move of moves) {
-            if (!this.moveNotation(move)) return false;
+            if (!this.moveNotation(move)) {
+                console.log(move);
+                return false;
+            }
         }
         console.log("true");
         // checkmate
@@ -501,13 +504,18 @@ class Chess {
         // get right piece symbol
         if (!piece) piece = "P";
         piece = this.#isWhiteTurn? piece: piece.toLowerCase();
+        if (promotionPiece) {
+            promotionPiece = this.#isWhiteTurn? promotionPiece: promotionPiece.toLowerCase();
+        }
 
-        // get start positions (startFile,startRank are not definite)
-        startFile = startFile? "abcdefgh".indexOf(startFile): 0;
-        startRank = startRank? 8-Number(startRank): 0;
+        // get start positions
+        startFile = startFile? "abcdefgh".indexOf(startFile): undefined;
+        startRank = startRank? 8-Number(startRank): undefined;
+        const startFileEnd = startFile!==undefined? startFile+1: 8;
+        const startRankEnd = startRank!==undefined? startRank+1: 8;
         let startPosArr = [];
-        for (let i=startRank; i<8; i++) {
-            for (let j=startFile; j<8; j++) {
+        for (let i=startRank || 0; i<startRankEnd; i++) {
+            for (let j=startFile || 0; j<startFileEnd; j++) {
                 if (piece===this.#board[i][j]) startPosArr.push([i,j]);
             }
         }
@@ -520,6 +528,7 @@ class Chess {
             if (moveResult) return true;
         }
 
+        console.log(startFile, startRank);
         // no valid move
         return false;
     }
