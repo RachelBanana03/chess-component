@@ -158,6 +158,7 @@ class Chess {
     }
 
     createBoard(notation) {
+        // if no notation, use starting position
         if (!notation) {
             this.#board = Array.from({length:8}, ()=>Array.from({length:8}, ()=>null));
             this.#board[0] = ["r", "n", "b", "q", "k", "b", "n" ,"r"];
@@ -181,6 +182,7 @@ class Chess {
             this.#moves.push([this.#toFEN(), null]);
             return true;
         }
+        // if FEN
         if (Chess.isFEN(notation)) {
             const [boardFen, turn, castling, enpassant, halfmove, fullmove] = notation.split(" ");
             this.#board = Chess.#toBoard(boardFen);
@@ -217,6 +219,41 @@ class Chess {
 
             return true;
         }
+        // try to create in PGN
+        // get fen, create board
+        const fen = notation.match(/\[FEN "([^"]+)"\]/)?.[1];
+        this.createBoard(fen);
+
+        // remove all tags, comments, nested moves
+        let movesStr = "";
+        const stack = [];
+        const brackets = {
+            "[": "]",
+            "{": "}",
+            "(": ")"
+        };
+        for (const c of notation) {
+            if (!stack.length && !(c in brackets)) {
+                movesStr += c;
+            }
+            if (c in brackets) {
+                stack.push(brackets[c]);
+            } else if (stack[stack.length-1]===c) {
+                stack.pop();
+            }
+        }
+        // remove numbering and end result
+        movesStr = movesStr.replace(/(?<=^|\s)\d+\.+/g, "");
+
+        // remove dollar symbols
+        movesStr = movesStr.replace(/\$\d+/g, "");
+
+        // remove extra whitespaces
+        movesStr = movesStr.trim().replace(/\s+/g, " ");
+
+        // remove end symbols (0-1, 1-0, 1/2-1/2, *)
+
+        // for each move, try to make, if false then recreate board with fen
         return false;
     }
 

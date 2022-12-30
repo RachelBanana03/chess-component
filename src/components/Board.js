@@ -4,11 +4,15 @@ import Chess, { ChessSymbols as CSym } from "../utils/Chess";
 import "../styles/Board.css";
 import { playMoveSfx } from '../utils/chessAudio';
 
-function useGame(fen) {
+function useGame(notation) {
     const gameRef = useRef();
     if (!gameRef.current) {
-        if (typeof fen === "string") fen = fen.trim();
-        gameRef.current = new Chess(Chess.isFEN(fen)? fen: null);
+        console.log(notation)
+        if (typeof notation === "string") {
+            notation = notation.trim();
+            notation = notation.replace(/\s+/g, " ");
+        }
+        gameRef.current = new Chess(notation);
     }
     return gameRef.current;
 }
