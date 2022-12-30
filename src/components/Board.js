@@ -7,7 +7,6 @@ import { playMoveSfx } from '../utils/chessAudio';
 function useGame(notation) {
     const gameRef = useRef();
     if (!gameRef.current) {
-        console.log(notation)
         if (typeof notation === "string") {
             notation = notation.trim();
             notation = notation.replace(/\s+/g, " ");

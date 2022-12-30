@@ -248,13 +248,23 @@ class Chess {
         // remove dollar symbols
         movesStr = movesStr.replace(/\$\d+/g, "");
 
+        // remove end symbols (0-1, 1-0, 1/2-1/2, *)
+        movesStr = movesStr.replace(/0-1|1-0|1\/2-1\/2|\*/g, "");
+
         // remove extra whitespaces
         movesStr = movesStr.trim().replace(/\s+/g, " ");
 
-        // remove end symbols (0-1, 1-0, 1/2-1/2, *)
-
         // for each move, try to make, if false then recreate board with fen
-        return false;
+        const moves = movesStr.split(" ");
+        if (moves.length > 500) return false;
+        console.log(moves);
+
+        for (const move of moves) {
+            if (!this.moveNotation(move)) return false;
+        }
+
+        // checkmate
+        return true;
     }
 
     #toFEN() {
@@ -466,6 +476,26 @@ class Chess {
         // record fen and moveSymbol
         this.#moves.push([this.#toFEN(), moveSymbol]);
         return moveSymbol;
+    }
+
+    // convert move from notation to positions
+    moveNotation(notation) {
+        // remove all + and # symbols
+        notation = notation.replace(/[+#]/, "");
+        // castling
+        if (notation==="O-O-O") {
+            // queenside
+            const kingPos = this.#kingPos[this.#isWhiteTurn? "K": "k"];
+            return this.move(kingPos, [kingPos[0], kingPos[1]-2]);
+        } else if (notation === "O-O") {
+            // kingside
+            const kingPos = this.#kingPos[this.#isWhiteTurn? "K": "k"];
+            return this.move(kingPos, [kingPos[0], kingPos[1]+2]);
+        }
+        // piece, start pos, end pos, promotion
+        // for each possible start position, try move
+        // break if true
+        return true;
     }
 
     #possibleMoves(piece, start, board) {
