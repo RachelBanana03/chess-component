@@ -262,7 +262,7 @@ class Chess {
         for (const move of moves) {
             if (!this.moveNotation(move)) return false;
         }
-
+        console.log("true");
         // checkmate
         return true;
     }
@@ -480,8 +480,8 @@ class Chess {
 
     // convert move from notation to positions
     moveNotation(notation) {
-        // remove all + and # symbols
-        notation = notation.replace(/[+#]/, "");
+        // remove all x, + and # symbols
+        notation = notation.replace(/[x+#]/g, "");
         // castling
         if (notation==="O-O-O") {
             // queenside
@@ -493,9 +493,35 @@ class Chess {
             return this.move(kingPos, [kingPos[0], kingPos[1]+2]);
         }
         // piece, start pos, end pos, promotion
+        const notationPattern = /^(?<piece>[NBRQK])?(?<startFile>[a-h])?(?<startRank>[1-8])?(?<endPos>[a-h][1-8])(?:=(?<promotionPiece>[NBRQ]))?$/;
+        const match = notation.match(notationPattern);
+        if (!match) return false;
+        let {piece, startFile, startRank, endPos, promotionPiece} = match.groups;
+
+        // get right piece symbol
+        if (!piece) piece = "P";
+        piece = this.#isWhiteTurn? piece: piece.toLowerCase();
+
+        // get start positions (startFile,startRank are not definite)
+        startFile = startFile? "abcdefgh".indexOf(startFile): 0;
+        startRank = startRank? 8-Number(startRank): 0;
+        let startPosArr = [];
+        for (let i=startRank; i<8; i++) {
+            for (let j=startFile; j<8; j++) {
+                if (piece===this.#board[i][j]) startPosArr.push([i,j]);
+            }
+        }
+
+        endPos = Chess.toPos(endPos);
         // for each possible start position, try move
-        // break if true
-        return true;
+        for (const startPos of startPosArr) {
+            const moveResult = this.move(startPos, endPos, false, promotionPiece);
+            // valid move exists
+            if (moveResult) return true;
+        }
+
+        // no valid move
+        return false;
     }
 
     #possibleMoves(piece, start, board) {
