@@ -53,6 +53,24 @@ function Board({width, height, children}) {
         setFenValue(game.getFEN(game.movesLength-1)); 
     }
 
+    const getFirstBoard = () => {
+        if (gameIndex===0) return;
+        const firstBoardData = game.browseBoard(0);
+        playMoveSfx(firstBoardData[2]); // play next move
+        setGameIndex(0);
+        setBoard(firstBoardData[0]);
+        setFenValue(game.getFEN(0));
+    }
+
+    const getLastBoard = () => {
+        if (gameIndex===game.movesLength-1) return;
+        const lastBoardData = game.browseBoard(game.movesLength-1);
+        playMoveSfx(lastBoardData[1]); // play prev move
+        setGameIndex(game.movesLength-1);
+        setBoard(lastBoardData[0]);
+        setFenValue(game.getFEN(game.movesLength-1));
+    }
+
     const getPrevBoard = () => {
         const prevBoardData = game.browseBoard(gameIndex-1); 
         if (!prevBoardData) return;
@@ -166,8 +184,10 @@ function Board({width, height, children}) {
             />
             <br/>
             <button onClick={resetBoard}>&#8634;</button>
+            <button onClick={getFirstBoard}>&#60;&#60;</button>
             <button onClick={getPrevBoard}>&#60;</button>
             <button onClick={getNextBoard}>&#62;</button>
+            <button onClick={getLastBoard}>&#62;&#62;</button>
         </>
     )
 }
