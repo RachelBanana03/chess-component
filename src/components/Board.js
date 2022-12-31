@@ -25,13 +25,20 @@ function Board({width, height, children}) {
     const [mousePos, setMousePos] = useState(null);
     const [pieceSelected, setPieceSelected] = useState(null);
     const [promotionOptions, setPromotionOptions] = useState(null);
-    
 
+    const displayBoard = (viewIndex, viewBoard, viewFen) => {
+        setGameIndex(viewIndex);
+        setBoard(viewBoard);
+        setFenValue(viewFen);
+    }
+    
     const makeMove = (start, end, promoPiece = null) => {
         if (gameIndex!==game.movesLength-1) { 
-            setGameIndex(game.movesLength-1); 
-            setBoard(game.board);
-            setFenValue(game.getFEN(game.movesLength-1)); 
+            displayBoard(
+                game.movesLength-1, 
+                game.board, 
+                game.getFEN(game.movesLength-1)
+            );
             return;
         }
 
@@ -48,53 +55,57 @@ function Board({width, height, children}) {
 
         // play audio according to symbol
         playMoveSfx(moveResult);
-        setGameIndex(game.movesLength-1);
-        setBoard(game.board);
-        setFenValue(game.getFEN(game.movesLength-1)); 
+        displayBoard(
+            game.movesLength-1, 
+            game.board, 
+            game.getFEN(game.movesLength-1)
+        );
     }
 
     const getFirstBoard = () => {
         if (gameIndex===0) return;
         const firstBoardData = game.browseBoard(0);
         playMoveSfx(firstBoardData[2]); // play next move
-        setGameIndex(0);
-        setBoard(firstBoardData[0]);
-        setFenValue(game.getFEN(0));
+        displayBoard(0, firstBoardData[0], game.getFEN(0));
     }
 
     const getLastBoard = () => {
         if (gameIndex===game.movesLength-1) return;
         const lastBoardData = game.browseBoard(game.movesLength-1);
         playMoveSfx(lastBoardData[1]); // play prev move
-        setGameIndex(game.movesLength-1);
-        setBoard(lastBoardData[0]);
-        setFenValue(game.getFEN(game.movesLength-1));
+        displayBoard(
+            game.movesLength-1, 
+            lastBoardData[0], 
+            game.getFEN(game.movesLength-1)
+        );
     }
 
     const getPrevBoard = () => {
         const prevBoardData = game.browseBoard(gameIndex-1); 
         if (!prevBoardData) return;
         playMoveSfx(prevBoardData[2]); // play next move
-        setGameIndex(prevIndex=>prevIndex-1);
-        setBoard(prevBoardData[0]);
-        setFenValue(game.getFEN(gameIndex-1));  
+        displayBoard(
+            prevIndex=>prevIndex-1,
+            prevBoardData[0],
+            game.getFEN(gameIndex-1)
+        ); 
     }
 
     const getNextBoard = () => {
         const nextBoardData = game.browseBoard(gameIndex+1); 
         if (!nextBoardData) return;
         playMoveSfx(nextBoardData[1]); // play prev move
-        setGameIndex(prevIndex=>prevIndex+1);
-        setBoard(nextBoardData[0]);
-        setFenValue(game.getFEN(gameIndex+1)); 
+        displayBoard(
+            prevIndex=>prevIndex+1,
+            nextBoardData[0],
+            game.getFEN(gameIndex+1)
+        );
     }
 
     const resetBoard = () => {
         const initialFen = game.getFEN(0); 
         game.createBoard(initialFen);
-        setGameIndex(0);
-        setBoard(game.board);
-        setFenValue(game.getFEN(0)); 
+        displayBoard(0, game.board, game.getFEN(0));
     }
 
     const doPromotion = (piece) => {
@@ -136,9 +147,7 @@ function Board({width, height, children}) {
             
             // try create board
             if (game.createBoard(fenValue)) {
-                setGameIndex(0);
-                setBoard(game.board);
-                setFenValue(fenValue);
+                displayBoard(0, game.board, fenValue);
             };
         }
     }
